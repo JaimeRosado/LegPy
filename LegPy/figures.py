@@ -99,10 +99,12 @@ class e_hists:
         trans_hist = self.trans_hist.hist
         trans_coef = 1. - self.trans_hist.hist.cumsum() / self.trans_hist.hist.sum()  # backscattered electrons excluded
         print('Maximum depth (cm): ', round(self.max_depth, 3))
-        ax[1].bar(z_bin, trans_coef, width = self.delta_z)
+        ax[1].scatter(z_bin, trans_coef, s = 25)
         ax[1].set_xlabel('Depth (cm)')
         ax[1].set_ylabel('Fraction of electrons')
         ax[1].set_title('Transmission coefficient')
+        ax[1].set_xlim(xmin = 0.)
+        ax[1].set_ylim(ymin = 0.)
         trans_df = np.column_stack((z_bin, trans_hist, trans_coef))
         trans_df = pd.DataFrame(trans_df, columns = ['z/cm', 'electrons', 'fraction'])
 
