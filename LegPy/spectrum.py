@@ -131,8 +131,9 @@ class From_file(Mono):
         self.name = "from_file"
         self.spect_arr = spect_arr
         self.Imax= np.amax(spect_arr, axis = 0)[1] # maximum intensity
-        self.E_max = np.amax(spect_arr, axis = 0)[0] 
-        self.E_min = np.amin(spect_arr, axis = 0)[0]
+        self.E_max = np.amax(spect_arr, axis = 0)[0] + (spect_arr[1,0]-spect_arr[0,0]) / 2. ##FAM add half bin
+        self.E_min = np.amin(spect_arr, axis = 0)[0] - (spect_arr[1,0]-spect_arr[0,0]) / 2. ##FAM substract half bin
+
     def in_energy(self):
         while True:        
             E = self.E_min + (self.E_max - self.E_min) * rand.random() # random E
