@@ -43,15 +43,19 @@ def theta_Ray_Sc():
 def theta_phi_new_frame(theta_1, phi_1, theta, phi):
     if theta_1==0.:
         return (theta, phi)
+    sin_theta_1 = round(math.sin(theta_1), 5)
+    if sin_theta_1==0.:
+        return (math.pi-theta, phi)
     cos_theta_2 = math.cos(theta_1) * math.cos(theta) + math.sin(theta_1) * math.sin(theta) * math.cos(phi)
     theta_2 = math.acos(cos_theta_2)
     sin_theta_2 = math.sin(theta_2)
-    cos_phi2_phi1 = (math.cos(theta) - cos_theta_2 * math.cos(theta_1)) / math.sin(theta_1) / sin_theta_2
-    
-    cos_phi2_phi1 = round(cos_phi2_phi1, 5) # in case cosine > 1 (if necessary 7 -> 5)
+    cos_phi2_phi1 = (math.cos(theta) - cos_theta_2 * math.cos(theta_1)) / sin_theta_1 / sin_theta_2
+    cos_phi2_phi1 = min(1., cos_phi2_phi1)
+    cos_phi2_phi1 = max(-1., cos_phi2_phi1)
 
     sin_phi2_phi1 = math.sin(theta) * math.sin(phi) / sin_theta_2
     acos_ph2_ph1 = math.acos(cos_phi2_phi1)
+
     if sin_phi2_phi1 > 0.:
         phi_2 = acos_ph2_ph1 + phi_1
     else:
