@@ -1,14 +1,14 @@
 cff-version: 1.1.0
 message: "If you use this software, please cite it as below."
 authors:
-  - family-names: Fernando
-    given-names: Arqueros
+  - family-names: Arqueros
+    given-names: Fernando
     orcid: https://orcid.org/0000-0002-4930-9282
-  - family-names: Jaime
-    given-names: Rosado
+  - family-names: Rosado
+    given-names: Jaime
     orcid: https://orcid.org/0000-0001-8208-9480
-  - family-names: Víctor
-    given-names: Moya
+  - family-names: Moya
+    given-names: Víctor
 title: LegPy
 doi: 10.5281/zenodo.7248100
 version: v0.0
