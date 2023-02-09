@@ -102,7 +102,7 @@ def ext_range(hist_df):
     print('Extrapolated range (cm): ', round(R_ext, 3))
     print('Distribution mode (cm): ', round(z_tp, 3))
     print('Distribution average (cm): ', round(z_av, 3))
-    #return R_ext, z_tp, z_av
+    return R_ext, z_tp, z_av
 
 def plot_edep_z(E_dep, x_size, y_size, z_size, n_z, n_x, n_y, z_ind, c_profiles = False, lev = None): # plot of E_dep in z (depth) layers
     # z_ind is an array of indexes of z layers ti bo plot; e.g.,  ([0, 6, 12, 18, 24])
