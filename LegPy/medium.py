@@ -10,7 +10,7 @@ try:
 except ImportError:
     # Try backported to PY<37 `importlib_resources`.
     import importlib_resources as pkg_resources
-from . import xsection_data as xs
+from . import photon_data as xs
 from . import electron_data as ed
 #from IPython.display import display
 
@@ -80,7 +80,7 @@ class Medium:
         if density is not None and N is not None and Z is not None and A is not None and I is not None:
             w = N * A / Pmol_A # mass fractions. Pmol_A is used even if Pmol is given
             # e_gen class
-            e_data = e_gen(density, N, Z, A, w, I, e_E_min, e_E_max)
+            e_data = e_gen(name, density, N, Z, A, w, I, e_E_min, e_E_max)
 
         elif name is not None:  # e_nist class
             try:
@@ -92,7 +92,7 @@ class Medium:
                 X0 = e_data_nist[0,1] # radiation length in cm
                 e_data_nist = e_data_nist[1:]    
                 # e_nist class
-                e_data = e_nist(density, X0, e_data_nist)
+                e_data = e_nist(name, density, X0, e_data_nist)
             except:
                 pass
 
@@ -105,11 +105,32 @@ class Medium:
             self.ph_data = ph_data
             self.e_data = e_data
 
-    def plot(self, energies, l_style='', ph=True, inc=True, coh=True, pair=True, tot=True):
+    def plot_mu(self, energies, l_style='', ph=True, inc=True, coh=True, pair=True, tot=True):
         if self.ph_data is None:
             print('No photon cross section data is available')
+            return None
         return Plot_Mu_vs_E(self.ph_data, energies, l_style, ph, inc, coh, pair, tot)
 
+    def plot_R(self, energies, units='cm', l_style = ''):
+        if self.e_data is None:
+            print('No electron data is available')
+            return None
+        
+        csda = np.interp(energies, self.e_data.E_ref, self.e_data.R_ref)
+        y_label = 'R$_{CSDA}$'+'(cm)'  
+        if units == 'gcm2':
+            csda = csda * self.e_data.density
+            y_label = 'R$_{CSDA}$'+'(gcm$^{-2}$)'   
+        m_type = self.e_data.name
+        s_type = self.e_data.source
+        label = m_type + ' ' + s_type        
+        plt.loglog(energies, csda, l_style, label = label)
+        plt.xlabel('Energy (MeV)')
+        plt.ylabel(y_label)
+        plt.grid(True, which = 'both')
+        plt.title('CSDA Range versus Energy')
+        plt.legend()
+        #plt.show()
 
 ############ Photon data classes
 class ph_gen:
@@ -185,7 +206,7 @@ class ph_gen:
 
 class ph_nist(ph_gen):
     def __init__(self, name, density, cs_nist):
-        self.source = 'nist'
+        self.source = 'NIST'
         self.name = name
         self.density = density
         self.cs_nist = cs_nist
@@ -284,12 +305,12 @@ def Plot_Mu_vs_E(medium, energies, l_style='', ph=True, inc=True, coh=True, pair
         line_inc = 'b' + l_style
         plt.loglog(energies, mu_inc, line_inc, label = inc_name)
 
-    if coh and s_name == 'nist':
+    if coh and s_name == 'NIST':
         coh_name = 'Coh' + ' ' + s_name + ' ' + m_type
         line_coh = 'g' + l_style
         plt.loglog(energies, mu_coh, line_coh, label = coh_name)
 
-    if pair and s_name == 'nist':
+    if pair and s_name == 'NIST':
         pair_name = 'Pair' + ' ' + s_name + ' ' + m_type
         line_pair = 'm' + l_style
         plt.loglog(energies, mu_pair, line_pair, label = pair_name)
@@ -324,7 +345,9 @@ def Plot_Mu_vs_E(medium, energies, l_style='', ph=True, inc=True, coh=True, pair
 
 ############ Electron data classes
 class e_gen:
-    def __init__(self, density, N, Z, A, w, I, E_min, E_max):
+    def __init__(self, name, density, N, Z, A, w, I, E_min, E_max):
+        self.source = 'generic'
+        self.name = name
         self.density = density
         self.E_min = E_min
         self.E_max = E_max
@@ -475,18 +498,17 @@ class e_gen:
         for E in energies:
             index, E_dep2, s, scat, tail = self.first_step(E)
             self.first_steps = np.append(self.first_steps, [[E, index, E_dep2, s, scat, tail]], axis = 0)
-        
-
 
 class e_nist(e_gen):
-    def __init__(self, density, X0, e_data_nist):
+    def __init__(self, name, density, X0, e_data_nist):
+        self.source = 'NIST'
+        self.name = name
         self.density = density
         self.X0 = X0
         self.E_ref, self.R_ref = e_data_nist.transpose()
         self.R_ref = self.R_ref / self.density
         self.E_min = self.E_ref[0]
         self.E_max = self.E_ref[-1]
-
     
 def New_photon_data(data, density, name):
     #data must be a txt file with six columns: photon energy in MeV (from lower to higher energies),
