@@ -8,23 +8,24 @@ import matplotlib as mpl
 from matplotlib.patches import Circle, PathPatch
 import mpl_toolkits.mplot3d.art3d as art3d
 import random
+from .analysis_tools import ext_range
 
 
 class esc_gammas:
     # Plot theta vs energy of escaped photons
     def __init__(self, E_max):
         self.E_max = E_max
-        self.plot = np.array([[0., 0.]])
+        self.points = np.array([[0., 0.]])
         
     def add_count(self, output):
         hist_esc, E_ab, E, theta = output
         if hist_esc:
-            self.plot = np.append(self.plot, [[theta, E]], axis = 0)
+            self.points = np.append(self.points, [[theta, E]], axis = 0)
         
-    def out(self):
-        plot = self.plot[1:] # delete inital [0,0]
+    def plot(self):
+        points = self.points[1:] # delete inital [0,0]
         plt.figure()
-        plt.scatter(plot[:,0] / math.pi, plot[:,1], marker = '.')
+        plt.scatter(points[:,0] / math.pi, points[:,1], marker = '.')
         plt.xlabel('Angle ('+'\u03C0'+'$\cdot$'+'rad)')
         plt.ylabel('Energy (MeV)')
         plt.xlim(0., 1.)
@@ -70,6 +71,8 @@ class e_hists:
         self.trans_hist = hist(n_z, z_top) # maximum z
         self.back_hist = hist(n_ang, math.pi, math.pi/2.) # theta of backscattered electrons
         self.max_depth = 0.
+        self.z_bin = np.arange(self.delta_z/2., self.z_top, self.delta_z)
+        self.ang_bin = np.arange(math.pi/2. + self.delta_ang/2., math.pi, self.delta_ang)
         
     def add_count(self, output):
         e_in, E, z_max, position, theta = output
@@ -81,60 +84,76 @@ class e_hists:
         if not e_in and z<0.:
             self.back_hist.add_count(theta)
         
-    def out(self, h_save, h_plot):
-        if h_plot:
-            fig, ax = plt.subplots(1, 3, figsize=(15, 4), constrained_layout=True)
+    def plot(self):
+        fig, ax = plt.subplots(1, 3, figsize=(15, 4), constrained_layout=True)
 
-        # Histogram of final z
-        z_bin = np.arange(self.delta_z/2., self.z_top, self.delta_z)
+        # Histogram of final z 
         range_hist = self.range_hist.hist
         range_coef = 1. - self.range_hist.hist.cumsum() / self.range_hist.hist.sum() # backscattered electrons excluded
-        if h_plot:
-            ax[0].bar(z_bin, range_hist, width = self.delta_z)
-            ax[0].set_xlabel('Depth (cm)')
-            ax[0].set_ylabel('Number of electrons')
-            ax[0].set_title('Range of electrons')
-        range_df = np.column_stack((z_bin, range_hist, range_coef))
-        range_df = pd.DataFrame(range_df, columns = ['z/cm', 'electrons', 'fraction'])
+        ax[0].bar(self.z_bin, range_hist, width = self.delta_z)
+        ax[0].set_xlabel('Depth (cm)')
+        ax[0].set_ylabel('Number of electrons')
+        ax[0].set_title('Range of electrons')
         
         # Histogram of max z
         trans_hist = self.trans_hist.hist
         trans_coef = 1. - self.trans_hist.hist.cumsum() / self.trans_hist.hist.sum()  # backscattered electrons excluded
         print('Maximum depth (cm): ', round(self.max_depth, 3))
-        if h_plot:
-            ax[1].scatter(z_bin, trans_coef, s = 25)
-            ax[1].set_xlabel('Depth (cm)')
-            ax[1].set_ylabel('Fraction of electrons')
-            ax[1].set_title('Transmission coefficient')
-            ax[1].set_xlim(xmin = 0.)
-            ax[1].set_ylim(ymin = 0.)
-        trans_df = np.column_stack((z_bin, trans_hist, trans_coef))
-        trans_df = pd.DataFrame(trans_df, columns = ['z/cm', 'electrons', 'fraction'])
+        ax[1].scatter(self.z_bin, trans_coef, s = 25)
+        ax[1].set_xlabel('Depth (cm)')
+        ax[1].set_ylabel('Fraction of electrons')
+        ax[1].set_title('Transmission coefficient')
+        ax[1].set_xlim(xmin = 0.)
+        ax[1].set_ylim(ymin = 0.)
 
         # Histogram of theta for backscattered electrons
-        ang_bin = np.arange(math.pi/2. + self.delta_ang/2., math.pi, self.delta_ang)
         back_hist = self.back_hist.hist
-        back_hist_solid = back_hist / self.delta_ang / self.tot_n_part / (2. * math.pi * np.sin(ang_bin))
+        back_hist_solid = back_hist / self.delta_ang / self.tot_n_part / (2. * math.pi * np.sin(self.ang_bin))
         tot_back = back_hist.sum()
         print('Fraction of backscattered electrons: ', round(tot_back/self.tot_n_part, 3))
-        if h_plot:
-            ax[2].bar(ang_bin / math.pi, back_hist, width = self.delta_ang / math.pi)
-            ax[2].set_title('Angular spectrum of backscatered electrons')
-            ax[2].set_xlabel('Angle ('+'\u03C0'+'$\cdot$'+'rad)')
-            #ax[2].set_xlim(0., 1.)
-            ax[2].set_ylabel('Number of electrons')
-        back_df = np.column_stack((ang_bin, back_hist, back_hist_solid))
+        ax[2].bar(self.ang_bin / math.pi, back_hist, width = self.delta_ang / math.pi)
+        ax[2].set_title('Angular spectrum of backscatered electrons')
+        ax[2].set_xlabel('Angle ('+'\u03C0'+'$\cdot$'+'rad)')
+        #ax[2].set_xlim(0., 1.)
+        ax[2].set_ylabel('Number of electrons')
+
+    def final_z(self):
+        # Histogram of final z
+        range_hist = self.range_hist.hist
+        range_coef = 1. - self.range_hist.hist.cumsum() / self.range_hist.hist.sum() # backscattered electrons excluded
+        range_df = np.column_stack((self.z_bin, range_hist, range_coef))
+        range_df = pd.DataFrame(range_df, columns = ['z/cm', 'electrons', 'fraction'])
+        return range_df
+
+    def max_z(self):
+        # Histogram of max z
+        trans_hist = self.trans_hist.hist
+        trans_coef = 1. - self.trans_hist.hist.cumsum() / self.trans_hist.hist.sum()  # backscattered electrons excluded
+        trans_df = np.column_stack((self.z_bin, trans_hist, trans_coef))
+        trans_df = pd.DataFrame(trans_df, columns = ['z/cm', 'electrons', 'fraction'])
+        return trans_df
+
+    def ext_range(self, definition="final"):
+        if definition=="max":
+            df = self.max_z()
+        else:
+            df = self.final_x()
+        return ext_range(df)     
+
+    def backscattering(self):
+        # Histogram of theta for backscattered electrons
+        back_hist = self.back_hist.hist
+        back_hist_solid = back_hist / self.delta_ang / self.tot_n_part / (2. * math.pi * np.sin(self.ang_bin))
+        tot_back = back_hist.sum()
+        back_df = np.column_stack((self.ang_bin, back_hist, back_hist_solid))
         back_df = pd.DataFrame(back_df, columns = ['angle/rad', 'electrons', 'dn/dOmega'])
-
-        return (range_df, trans_df, back_df)
-
+        return back_df
 
 class gamma_hists:
     # Histogram of absorbed energy
     # Histograms of theta and E for escaped photons
-    def __init__(self, medium, n_ang, n_E, E_max, tot_n_part):
+    def __init__(self, n_ang, n_E, E_max, tot_n_part):
 
-        self.medium = medium
         self.n_ang = n_ang
         self.n_E = n_E
         self.E_max = E_max
@@ -144,6 +163,8 @@ class gamma_hists:
         self.E_ab_hist = hist(n_E, E_max)
         self.ang_out_hist = hist(n_ang, math.pi)
         self.E_out_hist = hist(n_E, E_max)
+        self.ang_bin = np.arange(self.delta_ang/2., math.pi, self.delta_ang)
+        self.E_bin = np.arange(self.delta_E/2., self.E_max, self.delta_E)
 
     def add_count(self, output):
         hist_esc, E_ab, E, theta = output
@@ -152,87 +173,85 @@ class gamma_hists:
             self.ang_out_hist.add_count(theta)
             self.E_out_hist.add_count(E)
             
-    def out(self, h_save, h_plot):
+    def plot(self):
         # canvas for plots
-        if h_plot:
-            fig, ax = plt.subplots(1, 3, figsize=(15, 4), constrained_layout=True)
+        fig, ax = plt.subplots(1, 3, figsize=(15, 4), constrained_layout=True)
 
         # angular distribution of outgoing photons
-        ang_bin = np.arange(self.delta_ang/2., math.pi, self.delta_ang)
         ang_out_hist = self.ang_out_hist.hist
-
-        # plot
-        if h_plot:
-            ax[0].bar(ang_bin / math.pi, ang_out_hist, width = self.delta_ang / math.pi)
-            ax[0].set_title('Angular spectrum of outgoing photons')
-            ax[0].set_xlabel('Angle ('+'\u03C0'+'$\cdot$'+'rad)')
-            #ax[0].set_xlim(0., 1.)
-            ax[0].set_ylabel('Number of photons')
-
-        # output
-        ang_out_df = np.column_stack((ang_bin, ang_out_hist / self.tot_n_part))
-        ang_out_df = pd.DataFrame(ang_out_df, columns = ['Angle/rad', 'photons/incid. gamma'])
+        ax[0].bar(self.ang_bin / math.pi, ang_out_hist, width = self.delta_ang / math.pi)
+        ax[0].set_title('Angular spectrum of outgoing photons')
+        ax[0].set_xlabel('Angle ('+'\u03C0'+'$\cdot$'+'rad)')
+        #ax[0].set_xlim(0., 1.)
+        ax[0].set_ylabel('Number of photons')
 
         # energy distribution of outgoing photons
-        E_bin = np.arange(self.delta_E/2., self.E_max, self.delta_E)
         E_out_hist = self.E_out_hist.hist
-
-        # plot
-        if h_plot:
-            ax[1].bar(E_bin, E_out_hist, width = self.delta_E)
-            ax[1].set_title('Energy spectrum of outgoing photons')
-            ax[1].set_xlabel('Energy (MeV)')
-            #ax[1].set_xlim(0., self.E_max)
-            ax[1].set_ylabel('Number of photons')
-
-        # output
-        E_out_df = np.column_stack((E_bin, E_out_hist / self.tot_n_part))
-        E_out_df = pd.DataFrame(E_out_df, columns = ['Energy/MeV', 'photons/incid. gamma'])
+        ax[1].bar(self.E_bin, E_out_hist, width = self.delta_E)
+        ax[1].set_title('Energy spectrum of outgoing photons')
+        ax[1].set_xlabel('Energy (MeV)')
+        #ax[1].set_xlim(0., self.E_max)
+        ax[1].set_ylabel('Number of photons')
 
         # absorbed energy distribution
+        E_ab_hist = self.E_ab_hist.hist       
+        ax[2].bar(self.E_bin, E_ab_hist, width = self.delta_E)
+        ax[2].set_title('Spectrum of absorbed energy')
+        ax[2].set_xlabel('Energy (MeV)')
+        #ax[2].set_xlim(0., self.E_max)
+        ax[2].set_ylabel('Number of photons')
+        ax[2].set_yscale('log')
+
+    def ang_out(self):
+        # angular distribution of outgoing photons
+        ang_out_hist = self.ang_out_hist.hist
+        ang_out_df = np.column_stack((self.ang_bin, ang_out_hist / self.tot_n_part))
+        ang_out_df = pd.DataFrame(ang_out_df, columns = ['Angle/rad', 'photons/incid. gamma'])
+        return ang_out_df
+
+    def E_out(self):
+        # energy distribution of outgoing photons
+        E_out_hist = self.E_out_hist.hist
+        E_out_df = np.column_stack((self.E_bin, E_out_hist / self.tot_n_part))
+        E_out_df = pd.DataFrame(E_out_df, columns = ['Energy/MeV', 'photons/incid. gamma'])
+        return E_out_df
+
+    def E_ab(self):
+        # absorbed energy distribution
         E_ab_hist = self.E_ab_hist.hist
-
-        # plot
-        if h_plot:        
-            ax[2].bar(E_bin, E_ab_hist, width = self.delta_E)
-            ax[2].set_title('Spectrum of absorbed energy')
-            ax[2].set_xlabel('Energy (MeV)')
-            #ax[2].set_xlim(0., self.E_max)
-            ax[2].set_ylabel('Number of photons')
-            ax[2].set_yscale('log')
-
-        # output
-        E_ab_df = np.column_stack((E_bin, E_ab_hist / self.tot_n_part))  
+        E_ab_df = np.column_stack((self.E_bin, E_ab_hist / self.tot_n_part))  
         E_ab_df = pd.DataFrame(E_ab_df, columns = ['Energy/MeV', 'photons/incid. gamma'])
+        return E_ab_df
 
-        # # excel files
-        if h_save:
-            En = "{:.{}f}".format( self.E_max, 2 ) + 'MeV'
-            m_type = self.medium.name
-            excel_name = 'ang_ener_'+ m_type + '_' + En + '.xlsx'
-            hist_writer = pd.ExcelWriter(excel_name, engine='xlsxwriter')
-            ang_out_df.to_excel(hist_writer, sheet_name = 'Ang_Spect_out_Photons')
-            E_out_df.to_excel(hist_writer, sheet_name = 'En_Spect_out_Photons')
-            E_ab_df.to_excel(hist_writer, sheet_name = 'Spect_abs_Energy')
-            hist_writer.save()
-            print(excel_name + ' written onto disk')
-
-        return (ang_out_df, E_out_df, E_ab_df)
+    def to_excel(self, fname):
+        # excel file
+        fname = fname + '.xlsx'
+        hist_writer = pd.ExcelWriter(fname, engine='xlsxwriter')
+        ang_out_df = self.ang_out()
+        E_out_df = self.E_out()
+        E_ab_df = self.E_ab()
+        ang_out_df.to_excel(hist_writer, sheet_name='Ang_Spect_out_Photons')
+        E_out_df.to_excel(hist_writer, sheet_name='En_Spect_out_Photons')
+        E_ab_df.to_excel(hist_writer, sheet_name='Spect_abs_Energy')
+        hist_writer.save()
+        print(fname + ' written onto disk')
     
-class fluence_data:
+class fluence:
     # Fluence curve along z axis
     # E hist of photons flowing through ds as a function of z
-    def __init__(self, geometry, n_z, n_E, E_max):
+    def __init__(self, geometry, n_z, n_E, E_max, tot_n_part):
         self.geometry = geometry
         self.n_z = n_z
         self.n_E = n_E
         self.E_max = E_max
         self.delta_E = E_max / n_E
         self.delta_r2 = geometry.voxelization.delta_r2
+        self.tot_n_part = tot_n_part
 
         self.z = np.linspace(geometry.z_bott, geometry.z_top, n_z+1) # n_z intervals, but n_z+1 values including z_top
         self.fluence = np.zeros_like(self.z)
         self.hist = np.array([hist(n_E, E_max) for z in self.z]) # array of histograms
+        self.E_bin = np.arange(self.delta_E/2., self.E_max, self.delta_E)
 
     def add_count(self, p_back, p_forw, step_length, E):
         select, cos_theta = self.flow(p_back, p_forw, step_length)
@@ -260,47 +279,51 @@ class fluence_data:
         f[between] = r2<=self.delta_r2
         return f, abs(dz/l)
 
+    def plot(self):
+        fig, ax = plt.subplots(1, 3, figsize=(15, 4), constrained_layout=True)
+        # Total fluence
+        y = self.fluence / (math.pi*self.delta_r2) * 10000. / self.tot_n_part
+        ymax = y.max() * 1.1
+        ax[0].plot(self.z, y)
+        ax[0].set_title('Normalized fluence')
+        ax[0].set_ylim(ymin=0., ymax=ymax)
+        ax[0].set_xlabel('z (cm)')
+        ax[0].set_ylabel('m$^{-2}$')
         
-    def out(self, n_part, h_save, h_plot):
-        y = self.fluence / (math.pi*self.delta_r2) * 10000. / n_part
+        # Spectral fluence at the entrance (minimun z)
+        y = self.hist[0].hist / (self.delta_E*math.pi*self.delta_r2) * 10000. / self.tot_n_part
+        ax[1].bar(self.E_bin, y, width = self.delta_E)
+        ax[1].set_title('z = ' + str(self.z[0]) +' cm')
+        ax[1].set_xlabel('E (MeV)')
+        ax[1].set_ylabel('MeV$^{-1}$·m$^{-2}$')
 
-        if h_plot:
-            fig, ax = plt.subplots(1, 3, figsize=(15, 4), constrained_layout=True)
-            # fluence curve
-            ymax = y.max() * 1.1
-            ax[0].plot(self.z, y)
-            ax[0].set_title('Normalized fluence')
-            ax[0].set_ylim(ymin=0., ymax=ymax)
-            ax[0].set_xlabel('z (cm)')
-            ax[0].set_ylabel('m$^{-2}$')
+        # Spectral fluence at the exit (maximum z)
+        y = self.hist[-1].hist / (self.delta_E*math.pi*self.delta_r2) * 10000. / self.tot_n_part
+        ax[2].bar(self.E_bin, y, width = self.delta_E)
+        ax[2].set_title('z = ' + str(self.z[-1]) +' cm')
+        ax[2].set_xlabel('E (MeV)')
+        ax[2].set_ylabel('MeV$^{-1}$·m$^{-2}$')
 
-        E_bin = np.arange(self.delta_E/2., self.E_max, self.delta_E)
+    def to_df(self):
+        # Dataframe with spectral fluence data
         fluence_df = np.array([h.hist for h in self.hist])
-        fluence_df = fluence_df / (self.delta_E * math.pi*self.delta_r2) * 10000. / n_part
-        fluence_df = pd.DataFrame(fluence_df, columns = np.round(E_bin, 2), index = self.z)
-        fluence_df.index.name = 'z(cm)'
-        fluence_df.columns.name = 'E(MeV)'
-        
-        if h_plot:
-            E_hist = fluence_df.iloc[0,:]
-            ax[1].bar(E_bin, E_hist, width = self.delta_E)
-            ax[1].set_title('z = ' + str(self.z[0]) +' cm')
-            ax[1].set_xlabel('E (MeV)')
-            ax[1].set_ylabel('MeV$^{-1}$·m$^{-2}$')
+        fluence_df = fluence_df / (self.delta_E * math.pi*self.delta_r2) * 10000. / self.tot_n_part
+        fluence_df = pd.DataFrame(fluence_df, columns = np.round(self.E_bin, 2), index = self.z)
+        fluence_df.index.name = 'z(cm)' # rows are z bins
+        fluence_df.columns.name = 'E(MeV)' # columns are E bins
 
-            E_hist = fluence_df.iloc[-1,:]
-            ax[2].bar(E_bin, E_hist, width = self.delta_E)
-            ax[2].set_title('z = ' + str(self.z[-1]) +' cm')
-            ax[2].set_xlabel('E (MeV)')
-            ax[2].set_ylabel('MeV$^{-1}$·m$^{-2}$')
-
+        # Total fluence is in the last column
+        y = self.fluence / (math.pi*self.delta_r2) * 10000. / self.tot_n_part
         fluence_df['total'] = y
-        
-        if h_save:
-            En = "{:.{}f}".format( self.E_max, 2 ) + 'MeV'
-            excel_name = 'fluence_' + En + '.xlsx'
-            hist_writer = pd.ExcelWriter(excel_name, engine='xlsxwriter')
-            open(excel_name, "w") # to excel file
-            fluence_df.to_excel(excel_name, sheet_name = 'fluence', header = 'z(cm)', float_format = '%.3e') # includes bining data
-
         return fluence_df
+
+    def to_excel(self, fname):
+        # excel file
+        fname = fname + '.xlsx'
+        hist_writer = pd.ExcelWriter(fname, engine='xlsxwriter')
+        fluence_df = self.to_df()
+        open(fname, "w") # to excel file
+        fluence_df.to_excel(fname, sheet_name='fluence', header='z(cm)', float_format='%.3e') # includes bining data
+        hist_writer.save()
+        print(fname + ' written onto disk')
+        
