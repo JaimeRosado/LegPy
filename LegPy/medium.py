@@ -222,7 +222,7 @@ class ph_nist(ph_gen):
         self.init_E = np.array([[0., None, None, None, None, None]]) # Restart initial energies for a new simulation
 
     def init_MC(self, energies, pair=True):
-        # Re-define Mu_Pair_section for a new simulation
+        # Re-define Mu_Pair_Cross_section for a new simulation
         # Cross section data for uploaded initial energies
         if np.size(self.cs_nist, axis=1)==5 and pair:
             def func(E):

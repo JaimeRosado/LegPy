@@ -189,101 +189,39 @@ class Ortho:
         return True, p_forw, sol
 
     def plot(self):
-        if self.N_media == 1:
-            x = np.linspace(self.x_left, self.x_right, 50)
-            y = np.linspace(self.y_left, self.y_right, 50)
-            z = np.linspace(self.z_bott, self.z_top, 50)
+        x = np.linspace(self.x_left, self.x_right, 50)
+        y = np.linspace(self.y_left, self.y_right, 50)
+        z = np.linspace(self.z_bott, self.z_top, 50)
 
-            fig = plt.figure()
-            x_grid, y_grid = np.meshgrid(x, y)
-            z1_grid = (np.ones_like(x_grid))*self.z_bott
-            z2_grid = (np.ones_like(x_grid))*self.z_top
-            ax = fig.add_subplot(111, projection='3d')
-            ax.plot_surface(x_grid, y_grid, z1_grid, color = 'c', alpha=0.25)
-            ax.plot_surface(x_grid, y_grid, z2_grid, color = 'c', alpha=0.25)
+        fig = plt.figure()
+        x_grid, y_grid = np.meshgrid(x, y)
+        z1_grid = (np.ones_like(x_grid))*self.z_bott
+        z2_grid = (np.ones_like(x_grid))*self.z_top
+        ax = fig.add_subplot(111, projection='3d')
+        ax.plot_surface(x_grid, y_grid, z1_grid, color = 'c', alpha=0.25)
+        ax.plot_surface(x_grid, y_grid, z2_grid, color = 'c', alpha=0.25)
 
-            x_grid, z_grid = np. meshgrid(x, z)
-            y1_grid = (np.ones_like(x_grid))*self.y_left
-            y2_grid = (np.ones_like(x_grid))*self.y_right
-            ax.plot_surface(x_grid, y1_grid, z_grid, color = 'c', alpha=0.25)
-            ax.plot_surface(x_grid, y2_grid, z_grid, color = 'c', alpha=0.25)
+        x_grid, z_grid = np. meshgrid(x, z)
+        y1_grid = (np.ones_like(x_grid))*self.y_left
+        y2_grid = (np.ones_like(x_grid))*self.y_right
+        ax.plot_surface(x_grid, y1_grid, z_grid, color = 'c', alpha=0.25)
+        ax.plot_surface(x_grid, y2_grid, z_grid, color = 'c', alpha=0.25)
 
-            y_grid, z_grid = np. meshgrid(y, z)
-            x1_grid = (np.ones_like(x_grid))*self.x_left
-            x2_grid = (np.ones_like(x_grid))*self.x_right
-            ax.plot_surface(x1_grid, y_grid, z_grid, color = 'c', alpha=0.25)
-            ax.plot_surface(x2_grid, y_grid, z_grid, color = 'c', alpha=0.25)
+        y_grid, z_grid = np. meshgrid(y, z)
+        x1_grid = (np.ones_like(x_grid))*self.x_left
+        x2_grid = (np.ones_like(x_grid))*self.x_right
+        ax.plot_surface(x1_grid, y_grid, z_grid, color = 'c', alpha=0.25)
+        ax.plot_surface(x2_grid, y_grid, z_grid, color = 'c', alpha=0.25)
 
-            ax.set_xlabel("x (cm)")
-            ax.set_ylabel("y (cm)")
-            ax.set_zlabel("z (cm)")
+        ax.set_xlabel("x (cm)")
+        ax.set_ylabel("y (cm)")
+        ax.set_zlabel("z (cm)")
 
-            smax = max(self.x, self.y, self.z)
-            ax.set_zlim(0., smax)
-            ax.set_xlim(-smax/2., smax/2.)
-            ax.set_ylim(-smax/2., smax/2.)
-        
-        else:
-            x = np.linspace(self.x_left, self.x_right, 50)
-            y = np.linspace(self.y_left, self.y_right, 50)
-            z = np.linspace(self.z_bott, self.z_ch, 50)
+        smax = max(self.x, self.y, self.z)
+        ax.set_zlim(0., smax)
+        ax.set_xlim(-smax/2., smax/2.)
+        ax.set_ylim(-smax/2., smax/2.)
 
-            fig = plt.figure()
-            x_grid, y_grid = np.meshgrid(x, y)
-            z1_grid = (np.ones_like(x_grid))*self.z_bott
-            z2_grid = (np.ones_like(x_grid))*self.z_ch
-            ax = fig.add_subplot(111, projection='3d')
-            ax.plot_surface(x_grid, y_grid, z1_grid, color = 'c', alpha=0.25)
-            ax.plot_surface(x_grid, y_grid, z2_grid, color = 'c', alpha=0.25)
-
-            x_grid, z_grid = np. meshgrid(x, z)
-            y1_grid = (np.ones_like(x_grid))*self.y_left
-            y2_grid = (np.ones_like(x_grid))*self.y_right
-            ax.plot_surface(x_grid, y1_grid, z_grid, color = 'c', alpha=0.25)
-            ax.plot_surface(x_grid, y2_grid, z_grid, color = 'c', alpha=0.25)
-
-            y_grid, z_grid = np. meshgrid(y, z)
-            x1_grid = (np.ones_like(x_grid))*self.x_left
-            x2_grid = (np.ones_like(x_grid))*self.x_right
-            ax.plot_surface(x1_grid, y_grid, z_grid, color = 'c', alpha=0.25)
-            ax.plot_surface(x2_grid, y_grid, z_grid, color = 'c', alpha=0.25)
-
-            
-            x = np.linspace(self.x_left, self.x_right, 50)
-            y = np.linspace(self.y_left, self.y_right, 50)
-            z = np.linspace(self.z_ch, self.z_top, 50)
-
-            
-            x_grid, y_grid = np.meshgrid(x, y)
-            z1_grid = (np.ones_like(x_grid))*self.z_ch
-            z2_grid = (np.ones_like(x_grid))*self.z_top
-            
-            ax.plot_surface(x_grid, y_grid, z1_grid, color = 'r', alpha=0.25)
-            ax.plot_surface(x_grid, y_grid, z2_grid, color = 'r', alpha=0.25)
-
-            x_grid, z_grid = np. meshgrid(x, z)
-            y1_grid = (np.ones_like(x_grid))*self.y_left
-            y2_grid = (np.ones_like(x_grid))*self.y_right
-            ax.plot_surface(x_grid, y1_grid, z_grid, color = 'r', alpha=0.25)
-            ax.plot_surface(x_grid, y2_grid, z_grid, color = 'r', alpha=0.25)
-
-            y_grid, z_grid = np. meshgrid(y, z)
-            x1_grid = (np.ones_like(x_grid))*self.x_left
-            x2_grid = (np.ones_like(x_grid))*self.x_right
-            ax.plot_surface(x1_grid, y_grid, z_grid, color = 'r', alpha=0.25)
-            ax.plot_surface(x2_grid, y_grid, z_grid, color = 'r', alpha=0.25)
-            
-            
-            ax.set_xlabel("x (cm)")
-            ax.set_ylabel("y (cm)")
-            ax.set_zlabel("z (cm)")
-
-            smax = max(self.x, self.y, self.z)
-            ax.set_zlim(0., smax)
-            ax.set_xlim(-smax/2., smax/2.)
-            ax.set_ylim(-smax/2., smax/2.)
-            
-            
         return ax
 
     def Edep_init(self):
@@ -449,125 +387,32 @@ class Cylinder(Ortho):
         return True, p_forw, sol
         
     def plot(self):
-        
-       
-        if  self.N_media == 1:
-            fig = plt.figure()
-            ax = fig.add_subplot(111, projection='3d')
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
 
-            z = np.linspace(0., self.z, 50)
-            theta = np.linspace(0., 2. * np.pi, 50)
-            theta_grid, z_grid = np.meshgrid(theta, z)
-            x_grid = self.r * np.cos(theta_grid)
-            y_grid = self.r * np.sin(theta_grid)
-            ax.plot_surface(x_grid, y_grid, z_grid, alpha=0.25)
+        z = np.linspace(0., self.z, 50)
+        theta = np.linspace(0., 2. * np.pi, 50)
+        theta_grid, z_grid = np.meshgrid(theta, z)
+        x_grid = self.r * np.cos(theta_grid)
+        y_grid = self.r * np.sin(theta_grid)
+        ax.plot_surface(x_grid, y_grid, z_grid, alpha=0.25)
 
-            p = Circle((0, 0), self.r, color = 'c', alpha = 0.25)
-            ax.add_patch(p)
-            art3d.pathpatch_2d_to_3d(p, z=0, zdir="z")
-            p = Circle((0, 0), self.r, color = 'c', alpha = 0.25)
-            ax.add_patch(p)
-            art3d.pathpatch_2d_to_3d(p, z=self.z, zdir="z")
+        p = Circle((0, 0), self.r, color = 'c', alpha = 0.25)
+        ax.add_patch(p)
+        art3d.pathpatch_2d_to_3d(p, z=0, zdir="z")
+        p = Circle((0, 0), self.r, color = 'c', alpha = 0.25)
+        ax.add_patch(p)
+        art3d.pathpatch_2d_to_3d(p, z=self.z, zdir="z")
 
-            ax.set_xlabel("x (cm)")
-            ax.set_ylabel("y (cm)")
-            ax.set_zlabel("z (cm)")
+        ax.set_xlabel("x (cm)")
+        ax.set_ylabel("y (cm)")
+        ax.set_zlabel("z (cm)")
 
-            smax = max(2.*self.r, self.z)
-            ax.set_zlim(0, smax)
-            ax.set_xlim(-smax/2, smax/2)
-            ax.set_ylim(-smax/2, smax/2)
+        smax = max(2.*self.r, self.z)
+        ax.set_zlim(0, smax)
+        ax.set_xlim(-smax/2, smax/2)
+        ax.set_ylim(-smax/2, smax/2)
 
-        
-        elif self.z_ch != None:
-            
-            fig = plt.figure()
-            ax = fig.add_subplot(111, projection='3d')
-
-            z = np.linspace(0., self.z_ch, 50)
-            theta = np.linspace(0., 2. * np.pi, 50)
-            theta_grid, z_grid = np.meshgrid(theta, z)
-            x_grid = self.r * np.cos(theta_grid)
-            y_grid = self.r * np.sin(theta_grid)
-            ax.plot_surface(x_grid, y_grid, z_grid, alpha=0.25)
-            
-
-            p = Circle((0, 0), self.r, color = 'c', alpha = 0.25)
-            ax.add_patch(p)
-            art3d.pathpatch_2d_to_3d(p, z=0, zdir="z")
-            p = Circle((0, 0), self.r, color = 'red', alpha = 0.25)
-            ax.add_patch(p)
-            art3d.pathpatch_2d_to_3d(p, z=self.z_ch, zdir="z")
-
-            z = np.linspace(self.z_ch, self.z, 50)
-            theta = np.linspace(0., 2. * np.pi, 50)
-            theta_grid, z_grid = np.meshgrid(theta, z)
-            x_grid = self.r * np.cos(theta_grid)
-            y_grid = self.r * np.sin(theta_grid)
-            ax.plot_surface(x_grid, y_grid, z_grid, alpha=0.25,color='red')
-            
-            
-            p = Circle((0, 0), self.r, color = 'red', alpha = 0.25)
-            ax.add_patch(p)
-            art3d.pathpatch_2d_to_3d(p, z=self.z, zdir="z")
-            
-            ax.set_xlabel("x (cm)")
-            ax.set_ylabel("y (cm)")
-            ax.set_zlabel("z (cm)")
-
-            smax = max(2.*self.r, self.z)
-            ax.set_zlim(0, smax)
-            ax.set_xlim(-smax/2, smax/2)
-            ax.set_ylim(-smax/2, smax/2)
-        else :
-            fig = plt.figure()
-            ax = fig.add_subplot(111, projection='3d')
-
-            z = np.linspace(0., self.z, 50)
-            theta = np.linspace(0., 2. * np.pi, 50)
-            theta_grid, z_grid = np.meshgrid(theta, z)
-            x_grid = self.r_ch * np.cos(theta_grid)
-            y_grid = self.r_ch * np.sin(theta_grid)
-            ax.plot_surface(x_grid, y_grid, z_grid, alpha=0.25,color='c')
-
-            p = Circle((0, 0), self.r_ch, color = 'c', alpha = 0.25)
-            ax.add_patch(p)
-            art3d.pathpatch_2d_to_3d(p, z=0, zdir="z")
-            p = Circle((0, 0), self.r_ch, color = 'c', alpha = 0.25)
-            ax.add_patch(p)
-            art3d.pathpatch_2d_to_3d(p, z=self.z, zdir="z")
-            
-            
-            
-
-            z = np.linspace(0., self.z, 50)
-            theta = np.linspace(0., 2. * np.pi, 50)
-            theta_grid, z_grid = np.meshgrid(theta, z)
-            x_grid = self.r * np.cos(theta_grid)
-            y_grid = self.r * np.sin(theta_grid)
-            ax.plot_surface(x_grid, y_grid, z_grid, alpha=0.25,color='gold')
-
-            p = Circle((0, 0), self.r, color = 'gold', alpha = 0.25)
-            ax.add_patch(p)
-            art3d.pathpatch_2d_to_3d(p, z=0, zdir="z")
-            p = Circle((0, 0), self.r, color = 'gold', alpha = 0.25)
-            ax.add_patch(p)
-            art3d.pathpatch_2d_to_3d(p, z=self.z, zdir="z")
-
-            ax.set_xlabel("x (cm)")
-            ax.set_ylabel("y (cm)")
-            ax.set_zlabel("z (cm)")
-
-            
-            
-            
-            smax = max(2.*self.r, self.z)
-            ax.set_zlim(0, smax)
-            ax.set_xlim(-smax/2, smax/2)
-            ax.set_ylim(-smax/2, smax/2)
-            
-            
-            
         return ax
 
 class Sphere(Cylinder):
@@ -685,80 +530,25 @@ class Sphere(Cylinder):
         return True, p_forw, sol
 
     def plot(self):
-        
-        if self.N_media==1:
-            
-            N=200
-            u = np.linspace(0., 2. * np.pi, N)
-            v = np.linspace(0., np.pi, N)
-            x = np.outer(np.cos(u), np.sin(v)) * self.r
-            y = np.outer(np.sin(u), np.sin(v)) * self.r
-            z = np.outer(np.ones_like(u), np.cos(v)) * self.r
-            stride=2
+        N=200
+        u = np.linspace(0., 2. * np.pi, N)
+        v = np.linspace(0., np.pi, N)
+        x = np.outer(np.cos(u), np.sin(v)) * self.r
+        y = np.outer(np.sin(u), np.sin(v)) * self.r
+        z = np.outer(np.ones_like(u), np.cos(v)) * self.r
+        stride=2
 
-            fig = plt.figure()
-            ax = fig.add_subplot(111, projection='3d')
-            ax.plot_surface(x, y, z, linewidth=0.0, cstride=stride, rstride=stride, alpha=0.25,color='gold')
-           
-            ax.set_zlim(-self.r, self.r)
-            ax.set_xlim(-1.3*self.r, 1.3*self.r)
-            ax.set_ylim(-1.3*self.r, 1.3*self.r)
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.plot_surface(x, y, z, linewidth=0.0, cstride=stride, rstride=stride, alpha=0.25)
 
-            ax.set_xlabel("x (cm)")
-            ax.set_ylabel("y (cm)")
-            ax.set_zlabel("z (cm)")
-        elif self.z_ch!=None:
-            
-            N=200
-            u = np.linspace(0., 2. * np.pi, N)
-            v = np.linspace(0., np.pi, N)
-            x = np.outer(np.cos(u), np.sin(v)) * self.r
-            y = np.outer(np.sin(u), np.sin(v)) * self.r
-            z = np.outer(np.ones_like(u), np.cos(v)) * self.r
-            stride=2
-            
-            v_2 = np.linspace(0., np.arccos(self.z_ch/self.r), N)
-            x_2 = np.outer(np.cos(u), np.sin(v_2)) * self.r
-            y_2 = np.outer(np.sin(u), np.sin(v_2)) * self.r
-            z_2 = np.outer(np.ones_like(u), np.cos(v_2)) * self.r
-            
-            
-            
-            fig = plt.figure()
-            ax = fig.add_subplot(111, projection='3d')
-            ax.plot_surface(x, y, z, linewidth=0.0, cstride=stride, rstride=stride, alpha=0.25,color='gold')
-            ax.plot_surface(x_2, y_2, z_2, linewidth=0.0, cstride=stride, rstride=stride, alpha=0.25, color='red')
+        ax.set_zlim(-self.r, self.r)
+        ax.set_xlim(-1.3*self.r, 1.3*self.r)
+        ax.set_ylim(-1.3*self.r, 1.3*self.r)
 
-            ax.set_zlim(-self.r, self.r)
-            ax.set_xlim(-1.3*self.r, 1.3*self.r)
-            ax.set_ylim(-1.3*self.r, 1.3*self.r)
-
-            ax.set_xlabel("x (cm)")
-            ax.set_ylabel("y (cm)")
-            ax.set_zlabel("z (cm)")
-        else :
-            
-            coef= self.r_ch/self.r
-            N=200
-            u = np.linspace(0., 2. * np.pi, N)
-            v = np.linspace(0., np.pi, N)
-            x = np.outer(np.cos(u), np.sin(v)) * self.r
-            y = np.outer(np.sin(u), np.sin(v)) * self.r
-            z = np.outer(np.ones_like(u), np.cos(v)) * self.r
-            stride=2
-
-            fig = plt.figure()
-            ax = fig.add_subplot(111, projection='3d')
-            ax.plot_surface(x, y, z, linewidth=0.0, cstride=stride, rstride=stride, alpha=0.25,color='gold')
-            ax.plot_surface(x*coef, y*coef, z*coef, linewidth=0.0, cstride=stride, rstride=stride, alpha=0.25, color='red')
-
-            ax.set_zlim(-self.r, self.r)
-            ax.set_xlim(-1.3*self.r, 1.3*self.r)
-            ax.set_ylim(-1.3*self.r, 1.3*self.r)
-
-            ax.set_xlabel("x (cm)")
-            ax.set_ylabel("y (cm)")
-            ax.set_zlabel("z (cm)")
+        ax.set_xlabel("x (cm)")
+        ax.set_ylabel("y (cm)")
+        ax.set_zlabel("z (cm)")
         return ax
 
 class cart_vox:
@@ -1005,6 +795,6 @@ class sph_vox:
         ax.set_ylabel('E$_{dep}$ (keV cm$^{-3}$)')
         ax.set_title('Energy deposition vs. radial distance')
         ax.set_yscale('log')
-        ax.axvline(x = 0.03, color = 'black', ls='--',label = 'axvline - full height')
+
     def min_delta(self):
         return self.delta_r*10000.

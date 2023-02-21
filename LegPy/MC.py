@@ -93,7 +93,7 @@ def MC(media, geometry, spectrum, beam, n_part=100, E_cut=0.01, tracks=False,
     if tracks:
         ax = geometry.plot()
         def part_step(p_back, theta, phi, step_length):
-            change, p_forw, k = func(p_back, theta, phi, step_length)
+            change, p_forw, k = func(p_back, p_forw, step_length)
             geometry.tracks(p_back, p_forw, ax)
             return change, p_forw, k
     else:

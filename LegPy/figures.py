@@ -222,7 +222,7 @@ class gamma_hists:
 class fluence_data:
     # Fluence curve along z axis
     # E hist of photons flowing through ds as a function of z
-    def __init__(self, geometry, medium, n_z, n_E, E_max):
+    def __init__(self, geometry, n_z, n_E, E_max):
         self.geometry = geometry
         self.n_z = n_z
         self.n_E = n_E
@@ -233,8 +233,7 @@ class fluence_data:
         self.z = np.linspace(geometry.z_bott, geometry.z_top, n_z+1) # n_z intervals, but n_z+1 values including z_top
         self.fluence = np.zeros_like(self.z)
         self.hist = np.array([hist(n_E, E_max) for z in self.z]) # array of histograms
-        
-        self.medium = medium
+
     def add_count(self, p_back, p_forw, step_length, E):
         select, cos_theta = self.flow(p_back, p_forw, step_length)
         self.fluence[select] += 1./cos_theta
@@ -299,8 +298,7 @@ class fluence_data:
         
         if h_save:
             En = "{:.{}f}".format( self.E_max, 2 ) + 'MeV'
-            m_type = self.medium.name
-            excel_name = 'fluence_'+ m_type + '_' + En + '.xlsx'
+            excel_name = 'fluence_' + En + '.xlsx'
             hist_writer = pd.ExcelWriter(excel_name, engine='xlsxwriter')
             open(excel_name, "w") # to excel file
             fluence_df.to_excel(excel_name, sheet_name = 'fluence', header = 'z(cm)', float_format = '%.3e') # includes bining data
