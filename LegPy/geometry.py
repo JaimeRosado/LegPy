@@ -82,6 +82,7 @@ def Geometry(name='cylinder', x=None, y=None, z=None, r=None, diam=None,
         raise ValueError('Unsupported geometry')
 
     geometry.voxelization = voxelization
+    geometry.delta_v = voxelization.delta_v
     #geometry.matrix_E_dep = voxelization.matrix
     return geometry
 
@@ -189,39 +190,101 @@ class Ortho:
         return True, p_forw, sol
 
     def plot(self):
-        x = np.linspace(self.x_left, self.x_right, 50)
-        y = np.linspace(self.y_left, self.y_right, 50)
-        z = np.linspace(self.z_bott, self.z_top, 50)
+        if self.N_media == 1:
+            x = np.linspace(self.x_left, self.x_right, 50)
+            y = np.linspace(self.y_left, self.y_right, 50)
+            z = np.linspace(self.z_bott, self.z_top, 50)
 
-        fig = plt.figure()
-        x_grid, y_grid = np.meshgrid(x, y)
-        z1_grid = (np.ones_like(x_grid))*self.z_bott
-        z2_grid = (np.ones_like(x_grid))*self.z_top
-        ax = fig.add_subplot(111, projection='3d')
-        ax.plot_surface(x_grid, y_grid, z1_grid, color = 'c', alpha=0.25)
-        ax.plot_surface(x_grid, y_grid, z2_grid, color = 'c', alpha=0.25)
+            fig = plt.figure()
+            x_grid, y_grid = np.meshgrid(x, y)
+            z1_grid = (np.ones_like(x_grid))*self.z_bott
+            z2_grid = (np.ones_like(x_grid))*self.z_top
+            ax = fig.add_subplot(111, projection='3d')
+            ax.plot_surface(x_grid, y_grid, z1_grid, color = 'c', alpha=0.25)
+            ax.plot_surface(x_grid, y_grid, z2_grid, color = 'c', alpha=0.25)
 
-        x_grid, z_grid = np. meshgrid(x, z)
-        y1_grid = (np.ones_like(x_grid))*self.y_left
-        y2_grid = (np.ones_like(x_grid))*self.y_right
-        ax.plot_surface(x_grid, y1_grid, z_grid, color = 'c', alpha=0.25)
-        ax.plot_surface(x_grid, y2_grid, z_grid, color = 'c', alpha=0.25)
+            x_grid, z_grid = np. meshgrid(x, z)
+            y1_grid = (np.ones_like(x_grid))*self.y_left
+            y2_grid = (np.ones_like(x_grid))*self.y_right
+            ax.plot_surface(x_grid, y1_grid, z_grid, color = 'c', alpha=0.25)
+            ax.plot_surface(x_grid, y2_grid, z_grid, color = 'c', alpha=0.25)
 
-        y_grid, z_grid = np. meshgrid(y, z)
-        x1_grid = (np.ones_like(x_grid))*self.x_left
-        x2_grid = (np.ones_like(x_grid))*self.x_right
-        ax.plot_surface(x1_grid, y_grid, z_grid, color = 'c', alpha=0.25)
-        ax.plot_surface(x2_grid, y_grid, z_grid, color = 'c', alpha=0.25)
+            y_grid, z_grid = np. meshgrid(y, z)
+            x1_grid = (np.ones_like(x_grid))*self.x_left
+            x2_grid = (np.ones_like(x_grid))*self.x_right
+            ax.plot_surface(x1_grid, y_grid, z_grid, color = 'c', alpha=0.25)
+            ax.plot_surface(x2_grid, y_grid, z_grid, color = 'c', alpha=0.25)
 
-        ax.set_xlabel("x (cm)")
-        ax.set_ylabel("y (cm)")
-        ax.set_zlabel("z (cm)")
+            ax.set_xlabel("x (cm)")
+            ax.set_ylabel("y (cm)")
+            ax.set_zlabel("z (cm)")
 
-        smax = max(self.x, self.y, self.z)
-        ax.set_zlim(0., smax)
-        ax.set_xlim(-smax/2., smax/2.)
-        ax.set_ylim(-smax/2., smax/2.)
+            smax = max(self.x, self.y, self.z)
+            ax.set_zlim(0., smax)
+            ax.set_xlim(-smax/2., smax/2.)
+            ax.set_ylim(-smax/2., smax/2.)
+        
+        else:
+            x = np.linspace(self.x_left, self.x_right, 50)
+            y = np.linspace(self.y_left, self.y_right, 50)
+            z = np.linspace(self.z_bott, self.z_ch, 50)
 
+            fig = plt.figure()
+            x_grid, y_grid = np.meshgrid(x, y)
+            z1_grid = (np.ones_like(x_grid))*self.z_bott
+            z2_grid = (np.ones_like(x_grid))*self.z_ch
+            ax = fig.add_subplot(111, projection='3d')
+            ax.plot_surface(x_grid, y_grid, z1_grid, color = 'c', alpha=0.25)
+            ax.plot_surface(x_grid, y_grid, z2_grid, color = 'c', alpha=0.25)
+
+            x_grid, z_grid = np. meshgrid(x, z)
+            y1_grid = (np.ones_like(x_grid))*self.y_left
+            y2_grid = (np.ones_like(x_grid))*self.y_right
+            ax.plot_surface(x_grid, y1_grid, z_grid, color = 'c', alpha=0.25)
+            ax.plot_surface(x_grid, y2_grid, z_grid, color = 'c', alpha=0.25)
+
+            y_grid, z_grid = np. meshgrid(y, z)
+            x1_grid = (np.ones_like(x_grid))*self.x_left
+            x2_grid = (np.ones_like(x_grid))*self.x_right
+            ax.plot_surface(x1_grid, y_grid, z_grid, color = 'c', alpha=0.25)
+            ax.plot_surface(x2_grid, y_grid, z_grid, color = 'c', alpha=0.25)
+
+            
+            x = np.linspace(self.x_left, self.x_right, 50)
+            y = np.linspace(self.y_left, self.y_right, 50)
+            z = np.linspace(self.z_ch, self.z_top, 50)
+
+            
+            x_grid, y_grid = np.meshgrid(x, y)
+            z1_grid = (np.ones_like(x_grid))*self.z_ch
+            z2_grid = (np.ones_like(x_grid))*self.z_top
+            
+            ax.plot_surface(x_grid, y_grid, z1_grid, color = 'r', alpha=0.25)
+            ax.plot_surface(x_grid, y_grid, z2_grid, color = 'r', alpha=0.25)
+
+            x_grid, z_grid = np. meshgrid(x, z)
+            y1_grid = (np.ones_like(x_grid))*self.y_left
+            y2_grid = (np.ones_like(x_grid))*self.y_right
+            ax.plot_surface(x_grid, y1_grid, z_grid, color = 'r', alpha=0.25)
+            ax.plot_surface(x_grid, y2_grid, z_grid, color = 'r', alpha=0.25)
+
+            y_grid, z_grid = np. meshgrid(y, z)
+            x1_grid = (np.ones_like(x_grid))*self.x_left
+            x2_grid = (np.ones_like(x_grid))*self.x_right
+            ax.plot_surface(x1_grid, y_grid, z_grid, color = 'r', alpha=0.25)
+            ax.plot_surface(x2_grid, y_grid, z_grid, color = 'r', alpha=0.25)
+            
+            
+            ax.set_xlabel("x (cm)")
+            ax.set_ylabel("y (cm)")
+            ax.set_zlabel("z (cm)")
+
+            smax = max(self.x, self.y, self.z)
+            ax.set_zlim(0., smax)
+            ax.set_xlim(-smax/2., smax/2.)
+            ax.set_ylim(-smax/2., smax/2.)
+            
+            
         return ax
 
     def Edep_init(self):
@@ -230,14 +293,17 @@ class Ortho:
     def Edep_update(self, Edep):
         self.voxelization.update(self, Edep)
 
-    def Edep_out(self, n_phot):
-        return self.voxelization.out(n_phot)
+    def Edep_out(self, n_part):
+        return self.voxelization.out(n_part)
 
-    def Edep_save(self, E_dep, name, E_max, E_save):
-        return self.voxelization.save(E_dep, name, E_max, E_save)
+    def Edep_to_df(self, Edep):
+        return self.voxelization.to_df(Edep)
 
-    def Edep_plot(self, E_dep):
-        self.voxelization.plot(E_dep)
+    def Edep_to_excel(self, Edep_df, fname):
+        self.voxelization.to_excel(Edep_df, fname)
+
+    def Edep_plot(self, Edep):
+        self.voxelization.plot(Edep)
 
     def tracks(self, p1, p2, ax):
         track_x = [p1[0], p2[0]]
@@ -387,32 +453,125 @@ class Cylinder(Ortho):
         return True, p_forw, sol
         
     def plot(self):
-        fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
+        
+       
+        if  self.N_media == 1:
+            fig = plt.figure()
+            ax = fig.add_subplot(111, projection='3d')
 
-        z = np.linspace(0., self.z, 50)
-        theta = np.linspace(0., 2. * np.pi, 50)
-        theta_grid, z_grid = np.meshgrid(theta, z)
-        x_grid = self.r * np.cos(theta_grid)
-        y_grid = self.r * np.sin(theta_grid)
-        ax.plot_surface(x_grid, y_grid, z_grid, alpha=0.25)
+            z = np.linspace(0., self.z, 50)
+            theta = np.linspace(0., 2. * np.pi, 50)
+            theta_grid, z_grid = np.meshgrid(theta, z)
+            x_grid = self.r * np.cos(theta_grid)
+            y_grid = self.r * np.sin(theta_grid)
+            ax.plot_surface(x_grid, y_grid, z_grid, alpha=0.25)
 
-        p = Circle((0, 0), self.r, color = 'c', alpha = 0.25)
-        ax.add_patch(p)
-        art3d.pathpatch_2d_to_3d(p, z=0, zdir="z")
-        p = Circle((0, 0), self.r, color = 'c', alpha = 0.25)
-        ax.add_patch(p)
-        art3d.pathpatch_2d_to_3d(p, z=self.z, zdir="z")
+            p = Circle((0, 0), self.r, color = 'c', alpha = 0.25)
+            ax.add_patch(p)
+            art3d.pathpatch_2d_to_3d(p, z=0, zdir="z")
+            p = Circle((0, 0), self.r, color = 'c', alpha = 0.25)
+            ax.add_patch(p)
+            art3d.pathpatch_2d_to_3d(p, z=self.z, zdir="z")
 
-        ax.set_xlabel("x (cm)")
-        ax.set_ylabel("y (cm)")
-        ax.set_zlabel("z (cm)")
+            ax.set_xlabel("x (cm)")
+            ax.set_ylabel("y (cm)")
+            ax.set_zlabel("z (cm)")
 
-        smax = max(2.*self.r, self.z)
-        ax.set_zlim(0, smax)
-        ax.set_xlim(-smax/2, smax/2)
-        ax.set_ylim(-smax/2, smax/2)
+            smax = max(2.*self.r, self.z)
+            ax.set_zlim(0, smax)
+            ax.set_xlim(-smax/2, smax/2)
+            ax.set_ylim(-smax/2, smax/2)
 
+        
+        elif self.z_ch != None:
+            
+            fig = plt.figure()
+            ax = fig.add_subplot(111, projection='3d')
+
+            z = np.linspace(0., self.z_ch, 50)
+            theta = np.linspace(0., 2. * np.pi, 50)
+            theta_grid, z_grid = np.meshgrid(theta, z)
+            x_grid = self.r * np.cos(theta_grid)
+            y_grid = self.r * np.sin(theta_grid)
+            ax.plot_surface(x_grid, y_grid, z_grid, alpha=0.25)
+            
+
+            p = Circle((0, 0), self.r, color = 'c', alpha = 0.25)
+            ax.add_patch(p)
+            art3d.pathpatch_2d_to_3d(p, z=0, zdir="z")
+            p = Circle((0, 0), self.r, color = 'red', alpha = 0.25)
+            ax.add_patch(p)
+            art3d.pathpatch_2d_to_3d(p, z=self.z_ch, zdir="z")
+
+            z = np.linspace(self.z_ch, self.z, 50)
+            theta = np.linspace(0., 2. * np.pi, 50)
+            theta_grid, z_grid = np.meshgrid(theta, z)
+            x_grid = self.r * np.cos(theta_grid)
+            y_grid = self.r * np.sin(theta_grid)
+            ax.plot_surface(x_grid, y_grid, z_grid, alpha=0.25,color='red')
+            
+            
+            p = Circle((0, 0), self.r, color = 'red', alpha = 0.25)
+            ax.add_patch(p)
+            art3d.pathpatch_2d_to_3d(p, z=self.z, zdir="z")
+            
+            ax.set_xlabel("x (cm)")
+            ax.set_ylabel("y (cm)")
+            ax.set_zlabel("z (cm)")
+
+            smax = max(2.*self.r, self.z)
+            ax.set_zlim(0, smax)
+            ax.set_xlim(-smax/2, smax/2)
+            ax.set_ylim(-smax/2, smax/2)
+        else :
+            fig = plt.figure()
+            ax = fig.add_subplot(111, projection='3d')
+
+            z = np.linspace(0., self.z, 50)
+            theta = np.linspace(0., 2. * np.pi, 50)
+            theta_grid, z_grid = np.meshgrid(theta, z)
+            x_grid = self.r_ch * np.cos(theta_grid)
+            y_grid = self.r_ch * np.sin(theta_grid)
+            ax.plot_surface(x_grid, y_grid, z_grid, alpha=0.25,color='c')
+
+            p = Circle((0, 0), self.r_ch, color = 'c', alpha = 0.25)
+            ax.add_patch(p)
+            art3d.pathpatch_2d_to_3d(p, z=0, zdir="z")
+            p = Circle((0, 0), self.r_ch, color = 'c', alpha = 0.25)
+            ax.add_patch(p)
+            art3d.pathpatch_2d_to_3d(p, z=self.z, zdir="z")
+            
+            
+            
+
+            z = np.linspace(0., self.z, 50)
+            theta = np.linspace(0., 2. * np.pi, 50)
+            theta_grid, z_grid = np.meshgrid(theta, z)
+            x_grid = self.r * np.cos(theta_grid)
+            y_grid = self.r * np.sin(theta_grid)
+            ax.plot_surface(x_grid, y_grid, z_grid, alpha=0.25,color='gold')
+
+            p = Circle((0, 0), self.r, color = 'gold', alpha = 0.25)
+            ax.add_patch(p)
+            art3d.pathpatch_2d_to_3d(p, z=0, zdir="z")
+            p = Circle((0, 0), self.r, color = 'gold', alpha = 0.25)
+            ax.add_patch(p)
+            art3d.pathpatch_2d_to_3d(p, z=self.z, zdir="z")
+
+            ax.set_xlabel("x (cm)")
+            ax.set_ylabel("y (cm)")
+            ax.set_zlabel("z (cm)")
+
+            
+            
+            
+            smax = max(2.*self.r, self.z)
+            ax.set_zlim(0, smax)
+            ax.set_xlim(-smax/2, smax/2)
+            ax.set_ylim(-smax/2, smax/2)
+            
+            
+            
         return ax
 
 class Sphere(Cylinder):
@@ -530,25 +689,80 @@ class Sphere(Cylinder):
         return True, p_forw, sol
 
     def plot(self):
-        N=200
-        u = np.linspace(0., 2. * np.pi, N)
-        v = np.linspace(0., np.pi, N)
-        x = np.outer(np.cos(u), np.sin(v)) * self.r
-        y = np.outer(np.sin(u), np.sin(v)) * self.r
-        z = np.outer(np.ones_like(u), np.cos(v)) * self.r
-        stride=2
+        
+        if self.N_media==1:
+            
+            N=200
+            u = np.linspace(0., 2. * np.pi, N)
+            v = np.linspace(0., np.pi, N)
+            x = np.outer(np.cos(u), np.sin(v)) * self.r
+            y = np.outer(np.sin(u), np.sin(v)) * self.r
+            z = np.outer(np.ones_like(u), np.cos(v)) * self.r
+            stride=2
 
-        fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
-        ax.plot_surface(x, y, z, linewidth=0.0, cstride=stride, rstride=stride, alpha=0.25)
+            fig = plt.figure()
+            ax = fig.add_subplot(111, projection='3d')
+            ax.plot_surface(x, y, z, linewidth=0.0, cstride=stride, rstride=stride, alpha=0.25,color='gold')
+           
+            ax.set_zlim(-self.r, self.r)
+            ax.set_xlim(-1.3*self.r, 1.3*self.r)
+            ax.set_ylim(-1.3*self.r, 1.3*self.r)
 
-        ax.set_zlim(-self.r, self.r)
-        ax.set_xlim(-1.3*self.r, 1.3*self.r)
-        ax.set_ylim(-1.3*self.r, 1.3*self.r)
+            ax.set_xlabel("x (cm)")
+            ax.set_ylabel("y (cm)")
+            ax.set_zlabel("z (cm)")
+        elif self.z_ch!=None:
+            
+            N=200
+            u = np.linspace(0., 2. * np.pi, N)
+            v = np.linspace(0., np.pi, N)
+            x = np.outer(np.cos(u), np.sin(v)) * self.r
+            y = np.outer(np.sin(u), np.sin(v)) * self.r
+            z = np.outer(np.ones_like(u), np.cos(v)) * self.r
+            stride=2
+            
+            v_2 = np.linspace(0., np.arccos(self.z_ch/self.r), N)
+            x_2 = np.outer(np.cos(u), np.sin(v_2)) * self.r
+            y_2 = np.outer(np.sin(u), np.sin(v_2)) * self.r
+            z_2 = np.outer(np.ones_like(u), np.cos(v_2)) * self.r
+            
+            
+            
+            fig = plt.figure()
+            ax = fig.add_subplot(111, projection='3d')
+            ax.plot_surface(x, y, z, linewidth=0.0, cstride=stride, rstride=stride, alpha=0.25,color='gold')
+            ax.plot_surface(x_2, y_2, z_2, linewidth=0.0, cstride=stride, rstride=stride, alpha=0.25, color='red')
 
-        ax.set_xlabel("x (cm)")
-        ax.set_ylabel("y (cm)")
-        ax.set_zlabel("z (cm)")
+            ax.set_zlim(-self.r, self.r)
+            ax.set_xlim(-1.3*self.r, 1.3*self.r)
+            ax.set_ylim(-1.3*self.r, 1.3*self.r)
+
+            ax.set_xlabel("x (cm)")
+            ax.set_ylabel("y (cm)")
+            ax.set_zlabel("z (cm)")
+        else :
+            
+            coef= self.r_ch/self.r
+            N=200
+            u = np.linspace(0., 2. * np.pi, N)
+            v = np.linspace(0., np.pi, N)
+            x = np.outer(np.cos(u), np.sin(v)) * self.r
+            y = np.outer(np.sin(u), np.sin(v)) * self.r
+            z = np.outer(np.ones_like(u), np.cos(v)) * self.r
+            stride=2
+
+            fig = plt.figure()
+            ax = fig.add_subplot(111, projection='3d')
+            ax.plot_surface(x, y, z, linewidth=0.0, cstride=stride, rstride=stride, alpha=0.25,color='gold')
+            ax.plot_surface(x*coef, y*coef, z*coef, linewidth=0.0, cstride=stride, rstride=stride, alpha=0.25, color='red')
+
+            ax.set_zlim(-self.r, self.r)
+            ax.set_xlim(-1.3*self.r, 1.3*self.r)
+            ax.set_ylim(-1.3*self.r, 1.3*self.r)
+
+            ax.set_xlabel("x (cm)")
+            ax.set_ylabel("y (cm)")
+            ax.set_zlabel("z (cm)")
         return ax
 
 class cart_vox:
@@ -592,29 +806,26 @@ class cart_vox:
 
         self.matrix[ix, iy, iz] += E_dep
 
-    def out(self, n_phot): # return E_dep matrix normalized (per unit volume)
-        return self.matrix / self.delta_v * 1000. / n_phot
+    def out(self, n_part): # return E_dep matrix normalized (per unit volume)
+        return self.matrix / self.delta_v * 1000. / n_part
+    
+    def to_df(self, Edep):
+        print("Not implemented yet for cartesian voxelization.")
 
-    def save(self, E_dep, name, E_max, E_save):
-        if E_save:
-            m_type = name
-            En = "{:.{}f}".format( E_max, 2 ) + 'MeV'
-            f_name = 'Edep_'+ m_type + '_' + En + '.npy' 
-            open(f_name, "w")
-            np.save(f_name, E_dep)
-        return E_dep
+    def to_excel(self, Edep_df):
+        print("Not implemented yet for cartesian voxelization.")
 
-    def plot(self, E_dep):
+    def plot(self, Edep):
         extent = (self.x_left, self.x_right, self.y_left, self.y_right)
-        vmax = np.log10(np.amax(E_dep))
+        vmax = np.log10(np.amax(Edep))
         n_plots = min(4, self.n_z)
         fig_width = min(15., n_plots*15./4.)
         scale_factor = fig_width * self.y / self.x / n_plots
         fig, ax = plt.subplots(1, n_plots, figsize=(fig_width, scale_factor), constrained_layout=True)
         if n_plots==1:
             # log(E_dep) of iz layer [:,:,iz], transposed and rotated along the x-axis [::-1] to match the image xy axes
-            E_dep_log_z = np.log10(np.transpose(E_dep[:,:,0])[::-1])
-            psm = ax.imshow(E_dep_log_z, vmax = vmax, extent=extent)
+            Edep_log_z = np.log10(np.transpose(Edep[:,:,0])[::-1])
+            psm = ax.imshow(Edep_log_z, vmax = vmax, extent=extent)
             ax.set_xlabel('x (cm)')
             ax.set_ylabel('y (cm)')
 
@@ -622,8 +833,8 @@ class cart_vox:
             for im in range(n_plots):
                 iz = (im*(self.n_z-1)) // (n_plots-1)
                 # log(E_dep) of iz layer [:,:,iz], transposed and rotated along the x-axis [::-1] to match the image xy axes
-                E_dep_log_z = np.log10(np.transpose(E_dep[:,:,iz])[::-1])
-                psm = ax[im].imshow(E_dep_log_z, vmax = vmax, extent=extent)
+                Edep_log_z = np.log10(np.transpose(Edep[:,:,iz])[::-1])
+                psm = ax[im].imshow(Edep_log_z, vmax = vmax, extent=extent)
                 z_plot = self.z_bott + (iz + 0.5) * self.delta_z
                 ax[im].set_title('z = ' + str(z_plot) +' cm')
                 ax[im].set_xlabel('x (cm)')
@@ -668,39 +879,37 @@ class cyl_vox:
 
         self.matrix[iz, ir] += E_dep
 
-    def out(self, n_phot): # return E_dep matrix normalized (keV / cm^3 / photon)
+    def out(self, n_part): # return E_dep matrix normalized (keV / cm^3 / photon)
         matrix_norm = self.matrix.copy()
-        k = 1000. / n_phot / self.delta_v
+        k = 1000. / n_part / self.delta_v
         for z in range(self.n_z):
             matrix_norm[z] = matrix_norm[z] * k
         # matrix_norm = np.ndarray.transpose(matrix_E_dep_norm) # z - column; r - row
         return matrix_norm
 
-    def save(self, E_dep, name, E_max, E_save):
-        # Save pandas dataframe to excel
-        E_dep_df = pd.DataFrame(E_dep, columns = self.rbin, index = self.zbin)
-        E_dep_df.index.name = 'z(cm)'
-        E_dep_df.columns.name = 'r(cm)'
-        if E_save:
-            En = "{:.{}f}".format( E_max, 2 ) + 'MeV'
-            m_type = name
-            exc_name = 'Edep_'+ m_type + '_' + En + '.xlsx'
+    def to_df(self, Edep):
+        # return E_dep dataframe normalized (keV / cm^3 / photon)
+        Edep_df = pd.DataFrame(Edep, columns = self.rbin, index = self.zbin)
+        Edep_df.index.name = 'z(cm)'
+        Edep_df.columns.name = 'r(cm)'
+        return Edep_df
 
-            open(exc_name, "w") # to excel file
-            E_dep_df.to_excel(exc_name, sheet_name = 'Edep(r,z)', header = 'r(cm)', float_format = '%.3e') # includes bining data
-            print(exc_name + ' written onto disk.; columns = r(cm), rows = z(cm)')
-            print()
-        return E_dep_df
+    def to_excel(self, Edep_df, fname):
+        exc_name = fname + '.xlsx'
+        open(exc_name, "w") # to excel file
+        Edep_df.to_excel(exc_name, sheet_name = 'Edep(r,z)', header = 'r(cm)', float_format = '%.3e') # includes bining data
+        print(exc_name + ' written onto disk.; columns = r(cm), rows = z(cm)')
+        print()
 
-    def plot(self, E_dep):
+    def plot(self, Edep_orig):
         # figure for color plot 2D
         # fig_2D, ax_2D = plt.subplots(figsize=(5, 5), constrained_layout=True)
-        Edep = E_dep.copy()
+        Edep = Edep_orig.copy()
         fig_2D, ax_2D = plt.subplots(constrained_layout=True)
 
         extent = (0., self.r, self.z_bott, self.z_top)
-        vmax = np.log10(np.amax(E_dep))
-        psm = ax_2D.imshow(np.log10(E_dep)[::-1], vmax = vmax, extent = extent, aspect = 'auto')
+        vmax = np.log10(np.amax(Edep))
+        psm = ax_2D.imshow(np.log10(Edep)[::-1], vmax = vmax, extent = extent, aspect = 'auto')
         ax_2D.set_xlabel('R (cm)')
         ax_2D.set_ylabel('Depth (cm)')
         ax_2D.set_title('Energy deposition')
@@ -710,7 +919,7 @@ class cyl_vox:
         Edep_min = None
         if np.count_nonzero(Edep)<Edep.size:
             print('Not enough data to fill the histograms for projections of the E_dep matrix.')
-            Edep_min = E_dep[E_dep>0.].min()/10.
+            Edep_min = Edep[Edep>0.].min()/10.
             Edep[Edep==0.] = Edep_min #To fix log errors
 
         # figure for depth and radial projections
@@ -769,32 +978,31 @@ class sph_vox:
 
         self.matrix[ir] += E_dep
 
-    def out(self, n_phot): # return E_dep matrix normalized (per unit volume)
-        return self.matrix / self.delta_v * 1000. / n_phot
+    def out(self, n_part): # return E_dep matrix normalized (per unit volume)
+        return self.matrix / self.delta_v * 1000. / n_part
 
-    def save(self, E_dep, name, E_max, E_save):
+    def to_df(self, Edep):
         # Save pandas dataframe to excel
-        E_dep_df = pd.DataFrame(E_dep, index = self.rbin, columns = ['keV/cm^3'])
-        E_dep_df.index.name = 'R(cm)'
-        if E_save:
-            En = "{:.{}f}".format( E_max, 2 ) + 'MeV'
-            m_type = name
-            exc_name = 'Edep_'+ m_type + '_' + En + '.xlsx'    
+        Edep_df = pd.DataFrame(Edep, index = self.rbin, columns = ['keV/cm^3'])
+        Edep_df.index.name = 'R(cm)'
+        return Edep_df
+    
+    def to_excel(self, Edep_df, fname):
+        exc_name = fname + '.xlsx'
+        open(exc_name, "w") # to excel file
+        Edep_df.to_excel(exc_name, sheet_name = 'Edep(R)', float_format = '%.3e') # includes bining data
+        print(exc_name + ' written onto disk')
+        print()
 
-            open(exc_name, "w") # to excel file
-            E_dep_df.to_excel(exc_name, sheet_name = 'Edep(R)', float_format = '%.3e') # includes bining data
-            print(exc_name + ' written onto disk')
-            print()
-        return E_dep_df
-
-    def plot(self, E_dep):
+    def plot(self, Edep):
         # figure for radial dependence
         fig, ax = plt.subplots(constrained_layout=True)
-        ax.bar(self.rbin, E_dep, self.delta_r, fill = True)
+        ax.bar(self.rbin, Edep, self.delta_r, fill = True)
         ax.set_xlabel('R (cm)')
         ax.set_ylabel('E$_{dep}$ (keV cm$^{-3}$)')
         ax.set_title('Energy deposition vs. radial distance')
         ax.set_yscale('log')
+        #ax.axvline(x = 0.03, color = 'black', ls='--',label = 'axvline - full height')
 
     def min_delta(self):
         return self.delta_r*10000.
