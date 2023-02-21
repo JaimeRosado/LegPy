@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from .MC import Plot_beam, MC, photon, electron
+from .MC import Plot_beam, MC
 #from .angles import theta_KN, Compton_electron, theta_isotropic, phi_ang, theta_Ray_Sc, theta_phi_new_frame
 from .geometry import Geometry
 from .medium import Medium
