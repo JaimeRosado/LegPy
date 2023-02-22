@@ -1,5 +1,3 @@
-# Author: Fernando Arqueros
-
 import random
 import math
 # import numpy

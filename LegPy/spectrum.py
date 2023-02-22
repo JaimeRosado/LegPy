@@ -1,5 +1,3 @@
-# Author: Fernando Arqueros
-
 import LegPy as lpy
 import numpy as np
 import matplotlib.pyplot as plt
