@@ -12,17 +12,17 @@ from .geometry import cart_vox
 
 def Plot_beam(media, geometry, spectrum, beam, n_part=50, E_cut=0.01,
               tracks=True, points=False,
-              e_length=None, e_K=None, e_f=None, e_g=0.):
+              e_length=None, e_K=None, e_f=None, e_g=None, e_h=None):
     MC(media, geometry, spectrum, beam, n_part=n_part, E_cut=E_cut,
        e_transport=False, tracks=tracks, points=points,
-       e_length=e_length, e_K=e_K, e_f=e_f, e_g=e_g)
+       e_length=e_length, e_K=e_K, e_f=e_f, e_g=e_g, e_h=e_h)
 
 ##### MC options
 class MC:
     def __init__(self, media, geometry, spectrum, beam,
                  n_part=1000, E_cut=0.01, n_ang=20, n_E=20, n_z=20,
                  e_transport=False, tracks=False, points=False, gamma_out=False,
-                 e_length=None, e_K=None, e_f=None, e_g=0.):
+                 e_length=None, e_K=None, e_f=None, e_g=None, e_h=None):
 
         # media may be a list or a Medium object
         if isinstance(media, list):
@@ -64,6 +64,7 @@ class MC:
         self.e_K = e_K # 1-e_k is the decimal fraction of energy loss per step
         self.e_f = e_f # model parameter for gaussian angular distribution for elect. scattering
         self.e_g = e_g # model parameter for the isotropic component of the angular distribution
+        self.e_h = e_h # model parameter to introduce an energy dependence of e_f (and so mean_scat_gauss)
 
         # Initial particle energies for which calculations are speeded up
         if spectrum.name=='mono':
@@ -89,10 +90,24 @@ class MC:
                 if e_length is None and e_K is None:
                     e_length = vox_length
                     self.e_length = e_length
+
+                # e_f, e_g and e_h are not usually especified. If so, they may be different for each medium
+                if isinstance(e_f, list):
+                    e_f_i = e_f[index]
+                else:
+                    e_f_i = e_f
+                if isinstance(e_g, list):
+                    e_g_i = e_g[index]
+                else:
+                    e_g_i = e_g
+                if isinstance(e_h, list):
+                    e_h_i = e_h[index]
+                else:
+                    e_h_i = e_h
                 
                 # The electron step list is generated for each medium according to
                 # the simulation options and considering the usual energies
-                e_data.make_step_list(E_cut, e_length, e_K, e_f, e_g, energies)
+                e_data.make_step_list(E_cut, e_length, e_K, e_f_i, e_g_i, e_h_i, energies)
 
                 # If the default e_length value is not used
                 # warn if the step length is larger than the voxel size
@@ -498,6 +513,8 @@ class MC:
             r = 1.
         if r<tail or mean_scat>math.pi:
             theta_scat = theta_isotropic()
+        elif mean_scat==0.:
+            theta_scat = 0.
         else: # Most steps have gaussian distribution with mean_scat<pi
             theta_scat = abs(np.random.normal(0., mean_scat))
 

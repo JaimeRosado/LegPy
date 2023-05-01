@@ -384,13 +384,21 @@ class e_gen:
             self.R_ref[j+1] = R
             E_lower = E_upper
 
-    def make_step_list(self, E_cut, length, K, f=None, g=0., energies=None):
+    def make_step_list(self, E_cut, length, K, f=None, g=None, h=None, energies=None):
         # Step list with E, E_dep/2, s, mean_scat, tail
         if f is None:
-            # Best fit for Z>20. Backscattering is underestimated in light elements
-            f = 0.11803 / self.X0**0.5 + 1.4142
+            # Best fit for Z>20 and E=1MeV
+            # Backscattering is underestimated in light elements
+            f = 0.12983 / self.X0**0.5 + 1.55562
         self.f = f
+        if g is None:
+            g = 0.
         self.g = g
+        if h is None:
+            # Energy correction to improve results for light element and/or low energies
+            # 0.047 < h, where h is higher for light elements
+            h = -0.018182 * np.log( 1. / (self.X0)**0.5) + 0.047091
+        self.h = h
         self.E_cut = max(E_cut, self.E_min)
          
         if K is not None: # Constant energy loss fraction
@@ -410,6 +418,15 @@ class e_gen:
             mean_scat_gauss[1:] = 13.6 * np.sqrt(self.s[1:]/self.X0) * (1.+0.038*np.log(self.s[1:]/self.X0/beta2)) / betacp[1:]
         else:
             mean_scat_gauss = 13.6 * np.sqrt(self.s/self.X0) * (1.+0.038*np.log(self.s/self.X0/beta2)) / betacp
+        k = 1.
+        if h!=0.:
+            # Default/input f corresponds to reference energy of 1 MeV
+            # For E<1MeV, k>1 and this corrections makes the scattering angular distribution broader
+            # For E>1MeV, k<1 but the correction keeps small due to the logaritmic dependence
+            k = 1. - h * np.log(self.E)
+            k[k<0.] = 0. # not needed
+            f *= k
+        self.k = k
         self.mean_scat = f * mean_scat_gauss
 
         # Add a "tail" to the angular distribution for a small fraction of isotropic scattering events
