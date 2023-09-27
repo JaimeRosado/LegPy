@@ -224,14 +224,14 @@ class gamma_hists:
     def to_excel(self, fname):
         # excel file
         fname = fname + '.xlsx'
-        hist_writer = pd.ExcelWriter(fname, engine='xlsxwriter')
+        #hist_writer = pd.ExcelWriter(fname, engine='xlsxwriter')
         ang_out_df = self.ang_out()
         E_out_df = self.E_out()
         E_ab_df = self.E_ab()
         ang_out_df.to_excel(hist_writer, sheet_name='Ang_Spect_out_Photons')
         E_out_df.to_excel(hist_writer, sheet_name='En_Spect_out_Photons')
         E_ab_df.to_excel(hist_writer, sheet_name='Spect_abs_Energy')
-        hist_writer.save()
+        #hist_writer.save()
         print(fname + ' written onto disk')
     
 class fluence:
@@ -318,10 +318,10 @@ class fluence:
     def to_excel(self, fname):
         # excel file
         fname = fname + '.xlsx'
-        hist_writer = pd.ExcelWriter(fname, engine='xlsxwriter')
+        #hist_writer = pd.ExcelWriter(fname, engine='xlsxwriter')
         fluence_df = self.to_df()
         open(fname, "w") # to excel file
         fluence_df.to_excel(fname, sheet_name='fluence', header='z(cm)', float_format='%.3e') # includes bining data
-        hist_writer.save()
+        #hist_writer.save()
         print(fname + ' written onto disk')
         
