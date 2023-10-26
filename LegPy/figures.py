@@ -306,7 +306,7 @@ class fluence:
         # Dataframe with spectral fluence data
         fluence_df = np.array([h.hist for h in self.hist])
         fluence_df = fluence_df / (self.delta_E * math.pi*self.delta_r2) * 10000. / self.tot_n_part
-        fluence_df = pd.DataFrame(fluence_df, columns = np.round(self.E_bin, 2), index = self.z)
+        fluence_df = pd.DataFrame(fluence_df, columns = np.round(self.E_bin, 4), index = self.z)
         fluence_df.index.name = 'z(cm)' # rows are z bins
         fluence_df.columns.name = 'E(MeV)' # columns are E bins
 
