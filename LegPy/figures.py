@@ -44,15 +44,15 @@ class hist:
         self.left = 0.
         self.right = 0.
 
-    def add_count(self, val):
+    def add_count(self, val, counts=1):
         if val<self.val_min:
-            self.left += 1
+            self.left += counts
         elif val>self.val_max:
-            self.right +=1
+            self.right +=counts
         else:
             val = val - self.val_min
             i = min(self.i_max, int(val / self.delta))
-            self.hist[i] += 1
+            self.hist[i] += counts
 
 
 class e_hists:
@@ -253,9 +253,10 @@ class fluence:
 
     def add_count(self, p_back, p_forw, step_length, E):
         select, cos_theta = self.flow(p_back, p_forw, step_length)
-        self.fluence[select] += 1./cos_theta
+        counts = 1./cos_theta
+        self.fluence[select] += counts
         for hist in self.hist[select]:
-            hist.add_count(E)
+            hist.add_count(E, counts)
             
     def flow(self, p1, p2, l):
         # Check if the track intersects the z plane at a radius r such that r^2<delta_r2
