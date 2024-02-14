@@ -84,7 +84,7 @@ class Medium:
             try:
                 e_data_nist = np.loadtxt(pkg_resources.open_text(ed, name+'.txt'))
                 # The user-defined density is used if given
-                # If not and it is not loaded from photon nist data
+                # If not, it is not loaded from photon nist data
                 if density is None:
                     density = e_data_nist[0,0]
                 X0 = e_data_nist[0,1] # radiation length in cm
