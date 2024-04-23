@@ -1,4 +1,4 @@
-BEAM SPECTRA
+Beam Spectra
 120KVNu_1.8Al
 60kV_0.2Cu
 30kVp_Ag      
