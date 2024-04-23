@@ -3,10 +3,10 @@
 from .MC import Plot_beam, MC
 #from .angles import theta_KN, Compton_electron, theta_isotropic, phi_ang, theta_Ray_Sc, theta_phi_new_frame
 from .geometry import Geometry
-from .medium import Medium
+from .medium import Medium, Material_Builder, List_Media
 from .beam import Beam
 from .figures import *
-from .spectrum import Spectrum
+from .spectrum import Spectrum, List_Spectra
 from .analysis_tools import *
 
 #from .electron_transport16 import electron16

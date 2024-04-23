@@ -1,5 +1,6 @@
 import LegPy as lpy
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import random as rand
 import math
@@ -10,6 +11,11 @@ except ImportError:
     # Try backported to PY<37 `importlib_resources`.
     import importlib_resources as pkg_resources
 from . import beam_spectra as bs
+
+def List_Spectra():
+    # Show list of media loaded in List_Media.txt as a DataFrame
+    df = pd.read_csv(pkg_resources.open_text(bs,'beam_spectra.txt'), dtype=str, sep='\t')
+    return df
 
 def Spectrum(name='mono', E=None, E_w=None, E_min=None, E_max=None, E_mean=None, E_sigma=None, E_ch=None, file=None):
     

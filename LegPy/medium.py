@@ -15,6 +15,14 @@ from . import electron_data as ed
 N_Av = 6.022e23
 alpha = 1./137.036
 r_e = 2.8179e-13 #cm
+
+def List_Media(text=None):
+    # Show list of media loaded in List_Media.txt as a DataFrame
+    # If some text is given, only show entries cointaining this text, ignoring case
+    df = pd.read_csv(pkg_resources.open_text(xs,'media_names.txt'), dtype=str, sep='\t')
+    if text is not None:
+        df = df[df.Medium.str.contains(text, case=False)]
+    return df
     
 class Medium:
     def __init__(self, name=None,  density=None, Pmol=None, N=None, Z=None, A=None, I=None,
@@ -68,9 +76,29 @@ class Medium:
                 cs_nist = np.loadtxt(pkg_resources.open_text(xs, name+'.txt'))
                 if density is None: # The user-defined density is used if given
                     density = cs_nist[0,0]
-                cs_nist = cs_nist[1:]
+                x_ray_data = pd.read_csv(pkg_resources.open_text(xs, 'x_ray_data.csv'),
+                                         dtype=float, delimiter=' ')
+                # PZ vector with probability of ionization of each atom Z
+                # x_data matrix with data extracted from x_ray_data file for each atom Z
+                i = 1
+                PZ = []
+                PZi = 0.
+                x_data = []
+                while cs_nist[i,0]>0.: # X ray production data for each atom Z
+                    #Z, N, m, kk1, kk2 = cs_nist[i]
+                    data = cs_nist[i]
+                    PZi += data[1] * data[0]**data[2] # N * Z**m
+                    PZ.append(PZi)
+                    index = int(data[0])-1 # Z
+                    atomi = x_ray_data.loc[index].values[1:] # PY Ekalpha Ekbeta Pkalpha Ebinding
+                    x_data.append(atomi)
+                    i += 1
+                PZ = np.array(PZ)
+                PZ /= PZ[-1] # Normalize
+                x_data = np.array(x_data)
+                cs_nist = cs_nist[i+1:,:] # Cross section data
                 # ph_nist class
-                ph_data = ph_nist(name, density, cs_nist)
+                ph_data = ph_nist(name, density, cs_nist, PZ, x_data)
             except:
                 pass # ph_data = None
 
@@ -84,7 +112,7 @@ class Medium:
             try:
                 e_data_nist = np.loadtxt(pkg_resources.open_text(ed, name+'.txt'))
                 # The user-defined density is used if given
-                # If not, it is not loaded from photon nist data
+                # If not and it is not loaded from photon nist data
                 if density is None:
                     density = e_data_nist[0,0]
                 X0 = e_data_nist[0,1] # radiation length in cm
@@ -203,13 +231,15 @@ class ph_gen:
 
 
 class ph_nist(ph_gen):
-    def __init__(self, name, density, cs_nist):
+    def __init__(self, name, density, cs_nist, PZ, x_data):
         self.source = 'NIST'
         self.name = name
         self.density = density
         self.cs_nist = cs_nist
         self.E_min = cs_nist[0,0]
         self.E_max = cs_nist[-1,0]
+        self.PZ = PZ
+        self.x_data = x_data
 
         if np.size(cs_nist, axis=1)==4: # Pair-production cs not loaded on text file
             print("Pair-production cross section not available for this medium. It is set to 0.")
@@ -274,6 +304,19 @@ class ph_nist(ph_gen):
     def Mu_Coh_Cross_section(self, E):
         mu_coh = np.interp(E, self.cs_nist[:,0], self.cs_nist[:,1])
         return mu_coh
+
+    def Xray_prod(self, E):                   
+        Rand = np.random.rand()
+        index = next((i for i, num in enumerate(self.PZ) if num>Rand), None)
+        PZ = self.PZ[index]
+        PY, Ekalpha, Ekbeta, Pkalpha, Ebind = self.x_data[index]
+        if E>Ebind:
+            if np.random.rand()<PY:
+                if np.random.rand()<Pkalpha:
+                    return Ekalpha
+                else:
+                    return Ekbeta
+        return 0.
 
 
 def Plot_Mu_vs_E(medium, energies, l_style='', ph=True, inc=True, coh=True, pair=True, tot=True):
@@ -535,6 +578,21 @@ def New_photon_data(data, density, name):
     data = data[:,:5]
     data = np.append([[density, 0., 0., 0., 0.]], data, axis=0)
     np.savetxt(name+'.txt', data, fmt='%1.3E')
+
+def Material_Builder(Data_file, name, density, z, a, m=None):
+    N = len(z)
+    if m is None:
+        m = np.ones(N)*3.5
+
+    Matrix = np.zeros((N+2, 5))
+    Matrix[0,0] =density
+    Matrix[1:N+1,0] = z
+    Matrix[1:N+1,1] = a
+    Matrix[1:N+1,2] = m
+    
+    Data = np.loadtxt(Data_file)
+    Data = np.vstack((Matrix, Data))
+    np.savetxt('LegPy/photon_data/'+name+'.txt', Data, fmt='%1.3E')
 
 def New_electron_data(data, radiation_length, name):
     #data must be a txt file with two columns, first column must be electron energy in MeV (from lower to higher energies)

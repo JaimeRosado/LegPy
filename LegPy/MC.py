@@ -20,9 +20,9 @@ def Plot_beam(media, geometry, spectrum, beam, n_part=50, E_cut=0.01,
 ##### MC options
 class MC:
     def __init__(self, media, geometry, spectrum, beam,
-                 n_part=1000, E_cut=0.01, n_ang=20, n_E=20, n_z=20,
+                 n_part=1000, E_cut=0.01, n_ang=20, n_E=20, n_zloc=20,
                  e_transport=False, tracks=False, points=False, gamma_out=False,
-                 e_length=None, e_K=None, e_f=None, e_g=None, e_h=None):
+                 e_length=None, e_K=None, e_f=None, e_g=None, e_h=None,x_ray=True):
 
         # media may be a list or a Medium object
         if isinstance(media, list):
@@ -49,6 +49,9 @@ class MC:
             if index<N_media-1:
                 fname = fname + '_'
         self.fname = fname
+        
+        #VM xray
+        self.x_ray=x_ray
         
         self.geometry = geometry
         self.spectrum = spectrum
@@ -152,7 +155,7 @@ class MC:
         if part_type=='electron': # electron beam
             particle = self.electron
             # Histograms of both maximum and final z as well as of angle of backscattered electrons
-            self.hists = e_hists(n_z, n_ang, geometry.z_top, n_part)
+            self.hists = e_hists(n_zloc, n_ang, geometry.z_top, n_part)
             # Angle vs E plot can only be produced for photon beams
             gamma_out = False
             self.add_gamma_out = self.nothing
@@ -160,7 +163,7 @@ class MC:
         else: # photon beam
             particle = self.photon
             # Fluence histogram
-            self.fluence = fluence(geometry, n_z, n_E, E_max, n_part)
+            self.fluence = fluence(geometry, n_zloc, n_E, E_max, n_part)
             # Histograms of absorbed energy as well as of both energy and angle of escaped photons
             self.hists = gamma_hists(n_ang, n_E, E_max, n_part)
             if gamma_out:
@@ -396,17 +399,30 @@ class MC:
             new_phot = False # The photon interacts
             Proc = ph_data.Rand_proc(E)
             if Proc == 'Photoelectric':
-                E_ab += E # add photoelectric absorption.
+                if self.x_ray:
+                    EX = ph_data.Xray_prod(E) #EX may be 0
+                    E_e = E - EX
+                    E = EX
+                    E_ab += E_e
+                else:
+                    EX = 0.
+                    E_e = E
+                    E_ab += E
                 if self.e_transport:
-                    self.electron(p_forw, theta, phi, E)
+                    self.electron(p_forw, theta, phi, E_e)
                     # After simulating the electron, resume the photon
                     geometry.try_position(p_forw)
                     part_in = geometry.in_out()
                     geometry.init_medium(theta, phi)
                 else:
-                    geometry.Edep_update(E)
-                self.add_point(p_forw, E)
-                return False, E_ab, E, theta
+                    geometry.Edep_update(E_e)
+                self.add_point(p_forw, E_e)
+                if EX>0.:
+                    phi = phi_ang()
+                    theta = theta_isotropic()
+                    p_back = p_forw 
+                else:
+                    return False, E_ab, E, theta
 
             elif Proc == 'Compton': # Compton interaction
                 # calculation of photon-Compton angles

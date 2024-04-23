@@ -1,0 +1,276 @@
+Medium
+1,2-Dichlorobenzene
+1,2-Dichloroethane
+A-150 Tissue-Equivalent Plastic
+Ac
+Acetone
+Acetylene
+Adenine
+Adipose Tissue (Icrp)
+Ag
+Air, Dry (Near Sea Level)
+Al
+Alanine
+Aluminum Oxide
+Am
+Amber
+Ammonia
+Aniline
+Anthracene
+Ar
+At
+Au
+B-100 Bone-Equivalent Plastic
+B
+Ba
+Bakelite
+Barium Fluoride
+Barium Sulfate
+Be
+Benzene
+Beryllium Oxide
+Bi
+Bismuth Germanium Oxide
+Bk
+Blood (Icrp)
+Bone, Compact (Icru)
+Bone, Cortical (Icrp)
+Boron Carbide
+Boron Oxide
+Br
+Brain (Icrp)
+Butane
+C-552 Air-Equivalent Plastic
+C
+Ca
+Cadmium Telluride
+Cadmium Tungstate
+Calcium Carbonate
+Calcium Fluoride
+Calcium Oxide
+Calcium Sulfate
+Calcium Tungstate
+Carbon (Graphite)
+Carbon Dioxide
+Carbon Tetrachloride
+Cd
+Ce
+Cellulose Acetate Butyrate
+Cellulose Acetate, Cellophane
+Cellulose Nitrate
+Ceric Sulfate Dosimeter Solution
+Cesium Fluoride
+Cesium Iodide
+Cf
+Chlorobenzene
+Chloroform
+Cl
+Cm
+Co
+Concrete, Portland
+Cr
+Cs
+Cu
+Cyclohexane
+Dichlorodiethyl Ether
+Diethyl Ether
+Dimethyl Sulfoxide
+Dy
+Er
+Ethane
+Ethyl Alcohol
+Ethyl Cellulose
+Ethylene
+Eu
+Eye Lens (Icrp)
+F
+Fe
+Ferric Oxide
+Ferroboride
+Ferrous Oxide
+Ferrous Sulfate Dosimeter Solution
+Fr
+Freon-12
+Freon-12B2
+Freon-13
+Freon-13B1
+Freon-13I1
+Ga
+Gadolinium Oxysulfide
+Gd
+Ge
+Gel In Photographic Emulsion
+Glass, Lead
+Glass, Plate
+Glucose
+Glutamine
+Glycerol
+Guanine
+Gypsum, Plaster Of Paris
+H
+He
+Hf
+Hg
+Ho
+I
+In
+Ir
+K
+Kapton Polyimide Film
+Kr
+La
+Lanthanum Oxybromide
+Lanthanum Oxysulfide
+Lead Oxide
+Li
+Lithium Amide
+Lithium Carbonate
+Lithium Fluoride
+Lithium Hydride
+Lithium Iodide
+Lithium Oxide
+Lithium Tetraborate
+Lu
+Lung (Icrp)
+M3 Wax
+Magnesium Carbonate
+Magnesium Fluoride
+Magnesium Oxide
+Magnesium Tetraborate
+Mercuric Iodide
+Methane
+Methanol
+Mg
+Mix D Wax
+Mn
+Mo
+Ms20 Tissue Substitute
+Muscle, Skeletal (Icrp)
+Muscle, Striated (Icru)
+Muscle-Equivalent Liquid, With Sucrose
+Muscle-Equivalent Liquid, Without Sucrose
+N,N-Dimethyl Formamide
+N-Butyl Alcohol
+N-Heptane
+N-Hexane
+N-Pentane
+N-Propyl Alcohol
+N
+Na
+Naphthalene
+Nb
+Nd
+Ne
+Ni
+Nitrobenzene
+Nitrous Oxide
+Np
+Nylon, Du Pont Elvamide 8062
+Nylon, Type 11 (Rilsan)
+O
+Octane, Liquid
+Os
+P
+Pa
+Paraffin Wax
+Pb
+Pd
+Photographic Emulsion
+Plastic Scintillator (Vinyltoluene Based)
+Plutonium Dioxide
+Pm
+Po 
+Polyacrylonitrile
+Polycarbonate (Makrolon, Lexan)
+Polychlorostyrene
+Polyethylene Terephthalate (Mylar)
+Polyethylene
+Polymethyl Methacralate (Lucite, Perspex, Plexiglass)
+Polyoxymethylene
+Polypropylene
+Polystyrene
+Polytetrafluoroethylene (Teflon)
+Polytrifluorochloroethylene
+Polyvinyl Acetate
+Polyvinyl Alcohol
+Polyvinyl Butyral
+Polyvinyl Chloride
+Polyvinyl Pyrrolidone
+Polyvinylidene Chloride, Saran
+Polyvinylidene Fluoride
+Potassium Iodide
+Potassium Oxide
+Pr
+Propane, Liquid
+Propane
+Pt
+Pu
+Pyrex Glass
+Pyridine
+Ra
+Rb
+Re
+Rh
+Rn
+Ru
+Rubber, Butyl
+Rubber, Natural
+Rubber, Neoprene
+S
+Sb
+Sc
+Se
+Si
+Silicon Dioxide
+Silver Bromide
+Silver Chloride
+Silver Halides In Photographic Emulsion
+Silver Iodide
+Skin (Icrp)
+Sm
+Sn
+Sodium Carbonate
+Sodium Iodide
+Sodium Monoxide
+Sodium Nitrate
+Sr
+Stilbene
+Sucrose
+Ta
+Tb
+Tc
+Te
+Terphenyl
+Testes (Icrp)
+Tetrachloroethylene
+Th
+Thallium Chloride
+Ti
+Tissue, Soft (Icrp)
+Tissue, Soft (Icru Four-Component)
+Tissue-Equivalent Gas (Methane Based)
+Tissue-Equivalent Gas (Propane Based)
+Titanium Dioxide
+Tl
+Tm
+Toluene
+Trichloroethylene
+Triethyl Phosphate
+Tungsten Hexafluoride
+U
+Uranium Dicarbide
+Uranium Monocarbide
+Uranium Oxide
+Urea
+V
+Valine
+Viton Fluoroelastomer
+W
+Water Vapor
+Water, Liquid
+Xe
+Xylene
+Y
+Yb
+Zn
+Zr
