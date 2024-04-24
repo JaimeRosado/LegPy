@@ -11,6 +11,7 @@ except ImportError:
 from . import photon_data as xs
 from . import electron_data as ed
 #from IPython.display import display
+pd.set_option("display.max_rows", None)
 
 N_Av = 6.022e23
 alpha = 1./137.036
