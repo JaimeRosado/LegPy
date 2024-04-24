@@ -53,10 +53,10 @@ def Spectrum(name='mono', E=None, E_w=None, E_min=None, E_max=None, E_mean=None,
         if file is None:
             raise ValueError('Please, input file.')
         try:
-            spect_arr = np.loadtxt(file)
+            spect_arr = np.loadtxt(file+'.txt')
         except:
             try:
-                spect_arr = np.loadtxt(pkg_resources.open_text(bs, file))
+                spect_arr = np.loadtxt(pkg_resources.open_text(bs, file+'.txt'))
             except:
                 raise ValueError('File not found.')
         spectrum = From_file(spect_arr)
