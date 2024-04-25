@@ -1,48 +1,130 @@
 Medium
-1,2-Dichlorobenzene
-1,2-Dichloroethane
-A-150 Tissue-Equivalent Plastic
+H
+He
+Li
+Be
+B
+C
+N
+O
+F
+Ne
+Na
+Mg
+Al
+Si
+P
+S
+Cl
+Ar
+K
+Ca
+Sc
+Ti
+V
+Cr
+Mn
+Fe
+Co
+Ni
+Cu
+Zn
+Ga
+Ge
+As
+Se
+Br
+Kr
+Rb
+Sr
+Y
+Zr
+Nb
+Mo
+Tc
+Ru
+Rh
+Pd
+Ag
+Cd
+In
+Sn
+Sb
+Te
+I
+Xe
+Cs
+Ba
+La
+Ce
+Pr
+Nd
+Pm
+Sm
+Eu
+Gd
+Tb
+Dy
+Ho
+Er
+Tm
+Yb
+Lu
+Hf
+Ta
+W
+Re
+Os
+Ir
+Pt
+Au
+Hg
+Tl
+Pb
+Bi
+Po
+At
+Rn
+Fr
+Ra
 Ac
+Th
+Pa
+U
+Np
+Pu
+Am
+Cm
+Bk
+Cf
+A-150 Tissue-Equivalent Plastic
 Acetone
 Acetylene
 Adenine
-Adipose Tissue (Icrp)
-Ag
-Air, Dry (Near Sea Level)
-Al
+Adipose Tissue (ICRP)
+Air, Dry (near sea level)
 Alanine
 Aluminum Oxide
-Am
 Amber
 Ammonia
 Aniline
 Anthracene
-Ar
-At
-Au
 B-100 Bone-Equivalent Plastic
-B
-Ba
 Bakelite
 Barium Fluoride
 Barium Sulfate
-Be
 Benzene
-Beryllium Oxide
-Bi
-Bismuth Germanium Oxide
-Bk
-Blood (Icrp)
-Bone, Compact (Icru)
-Bone, Cortical (Icrp)
+Beryllium oxide
+Bismuth Germanium oxide
+Blood (ICRP)
+Bone, Compact (ICRU)
+Bone, Cortical (ICRP)
 Boron Carbide
 Boron Oxide
-Br
-Brain (Icrp)
+Brain (ICRP)
 Butane
+N-Butyl Alcohol
 C-552 Air-Equivalent Plastic
-C
-Ca
 Cadmium Telluride
 Cadmium Tungstate
 Calcium Carbonate
@@ -50,79 +132,55 @@ Calcium Fluoride
 Calcium Oxide
 Calcium Sulfate
 Calcium Tungstate
-Carbon (Graphite)
 Carbon Dioxide
 Carbon Tetrachloride
-Cd
-Ce
-Cellulose Acetate Butyrate
 Cellulose Acetate, Cellophane
+Cellulose Acetate Butyrate
 Cellulose Nitrate
 Ceric Sulfate Dosimeter Solution
 Cesium Fluoride
 Cesium Iodide
-Cf
 Chlorobenzene
 Chloroform
-Cl
-Cm
-Co
 Concrete, Portland
-Cr
-Cs
-Cu
 Cyclohexane
+1,2-Ddihlorobenzene
 Dichlorodiethyl Ether
+1,2-Dichloroethane
 Diethyl Ether
+N,N-Dimethyl Formamide
 Dimethyl Sulfoxide
-Dy
-Er
 Ethane
 Ethyl Alcohol
 Ethyl Cellulose
 Ethylene
-Eu
-Eye Lens (Icrp)
-F
-Fe
+Eye Lens (ICRP)
 Ferric Oxide
 Ferroboride
 Ferrous Oxide
 Ferrous Sulfate Dosimeter Solution
-Fr
 Freon-12
 Freon-12B2
 Freon-13
 Freon-13B1
 Freon-13I1
-Ga
 Gadolinium Oxysulfide
-Gd
-Ge
-Gel In Photographic Emulsion
+Gallium Arsenide
+Gel in Photographic Emulsion
 Glass, Lead
 Glass, Plate
+Glass, Pyrex
 Glucose
 Glutamine
 Glycerol
 Guanine
-Gypsum, Plaster Of Paris
-H
-He
-Hf
-Hg
-Ho
-I
-In
-Ir
-K
+Gypsum, Plaster of Paris
+N-Heptane
+N-Hexane
 Kapton Polyimide Film
-Kr
-La
 Lanthanum Oxybromide
 Lanthanum Oxysulfide
 Lead Oxide
-Li
 Lithium Amide
 Lithium Carbonate
 Lithium Fluoride
@@ -130,8 +188,7 @@ Lithium Hydride
 Lithium Iodide
 Lithium Oxide
 Lithium Tetraborate
-Lu
-Lung (Icrp)
+Lung (ICRP)
 M3 Wax
 Magnesium Carbonate
 Magnesium Fluoride
@@ -140,52 +197,31 @@ Magnesium Tetraborate
 Mercuric Iodide
 Methane
 Methanol
-Mg
 Mix D Wax
-Mn
-Mo
-Ms20 Tissue Substitute
-Muscle, Skeletal (Icrp)
-Muscle, Striated (Icru)
-Muscle-Equivalent Liquid, With Sucrose
-Muscle-Equivalent Liquid, Without Sucrose
-N,N-Dimethyl Formamide
-N-Butyl Alcohol
-N-Heptane
-N-Hexane
-N-Pentane
-N-Propyl Alcohol
-N
-Na
+MS20 Tissue Substitute
+Muscle, Skeletal
+Muscle, Striated
+Muscle-Equivalent Liquid, with Sucrose
+Muscle-Equivalent Liquid, without Sucrose
 Naphthalene
-Nb
-Nd
-Ne
-Ni
 Nitrobenzene
 Nitrous Oxide
-Np
-Nylon, Du Pont Elvamide 8062
-Nylon, Type 11 (Rilsan)
-O
+Nylon, Du Pont ELVAmide 8062
+Nylon, type 6 and type 6/6
+Nylon, type 6/10
+Nylon, type 11 (Rilsan)
 Octane, Liquid
-Os
-P
-Pa
 Paraffin Wax
-Pb
-Pd
+N-Pentane
 Photographic Emulsion
-Plastic Scintillator (Vinyltoluene Based)
+Plastic Scintillator (Vinyltoluene based)
 Plutonium Dioxide
-Pm
-Po 
 Polyacrylonitrile
 Polycarbonate (Makrolon, Lexan)
 Polychlorostyrene
-Polyethylene Terephthalate (Mylar)
 Polyethylene
-Polymethyl Methacralate (Lucite, Perspex, Plexiglass)
+Polyethylene Terephthalate (Mylar)
+Polymethyl Methacralate (Lucite, Perspex)
 Polyoxymethylene
 Polypropylene
 Polystyrene
@@ -195,82 +231,49 @@ Polyvinyl Acetate
 Polyvinyl Alcohol
 Polyvinyl Butyral
 Polyvinyl Chloride
-Polyvinyl Pyrrolidone
 Polyvinylidene Chloride, Saran
 Polyvinylidene Fluoride
+Polyvinyl Pyrrolidone
 Potassium Iodide
 Potassium Oxide
-Pr
-Propane, Liquid
 Propane
-Pt
-Pu
-Pyrex Glass
+Propane, Liquid
+N-Propyl Alcohol
 Pyridine
-Ra
-Rb
-Re
-Rh
-Rn
-Ru
 Rubber, Butyl
 Rubber, Natural
 Rubber, Neoprene
-S
-Sb
-Sc
-Se
-Si
 Silicon Dioxide
 Silver Bromide
 Silver Chloride
-Silver Halides In Photographic Emulsion
+Silver Halides in Photographic Emulsion
 Silver Iodide
-Skin (Icrp)
-Sm
-Sn
+Skin (ICRP)
 Sodium Carbonate
 Sodium Iodide
 Sodium Monoxide
 Sodium Nitrate
-Sr
 Stilbene
 Sucrose
-Ta
-Tb
-Tc
-Te
 Terphenyl
-Testes (Icrp)
+Testes (ICRP)
 Tetrachloroethylene
-Th
 Thallium Chloride
-Ti
-Tissue, Soft (Icrp)
-Tissue, Soft (Icru Four-Component)
-Tissue-Equivalent Gas (Methane Based)
-Tissue-Equivalent Gas (Propane Based)
+Tissue, Soft (ICRP)
+Tissue, Soft (ICRU four-component)
+Tissue-Equivalent GAS (Methane based)
+Tissue-Equivalent GAS (Propane based)
 Titanium Dioxide
-Tl
-Tm
 Toluene
 Trichloroethylene
 Triethyl Phosphate
 Tungsten Hexafluoride
-U
 Uranium Dicarbide
 Uranium Monocarbide
 Uranium Oxide
 Urea
-V
 Valine
 Viton Fluoroelastomer
-W
-Water Vapor
 Water, Liquid
-Xe
+Water Vapor
 Xylene
-Y
-Yb
-Zn
-Zr
