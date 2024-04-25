@@ -21,6 +21,7 @@ def List_Media(text=None):
     # Show list of media loaded in List_Media.txt as a DataFrame
     # If some text is given, only show entries cointaining this text, ignoring case
     df = pd.read_csv(pkg_resources.open_text(xs,'media_names.txt'), dtype=str, sep='\t')
+    df.index += 1
     if text is not None:
         df = df[df.Medium.str.contains(text, case=False)]
     return df

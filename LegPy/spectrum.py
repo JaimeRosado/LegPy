@@ -15,6 +15,7 @@ from . import beam_spectra as bs
 def List_Spectra():
     # Show list of media loaded in List_Media.txt as a DataFrame
     df = pd.read_csv(pkg_resources.open_text(bs,'beam_spectra.txt'), dtype=str, sep='\t')
+    df.index += 1
     return df
 
 def Spectrum(name='mono', E=None, E_w=None, E_min=None, E_max=None, E_mean=None, E_sigma=None, E_ch=None, file=None):
