@@ -569,37 +569,3 @@ class e_nist(e_gen):
         self.R_ref = self.R_ref / self.density
         self.E_min = self.E_ref[0]
         self.E_max = self.E_ref[-1]
-    
-def New_photon_data(data, density, name):
-    #data must be a txt file with six columns: photon energy in MeV (from lower to higher energies),
-    #coherent scattering, incoherent scattering, photoelectric absorption, pair production in nuclear field,
-    #pair production in electron field. All cross sections must be given in cm^2/g
-    #density in g/cm^3
-    data = np.loadtxt(data+'.txt')
-    data[:,4] = data[:,4] + data[:,5]
-    data = data[:,:5]
-    data = np.append([[density, 0., 0., 0., 0.]], data, axis=0)
-    np.savetxt(name+'.txt', data, fmt='%1.3E')
-
-def Material_Builder(Data_file, name, density, z, a, m=None):
-    N = len(z)
-    if m is None:
-        m = np.ones(N)*3.5
-
-    Matrix = np.zeros((N+2, 5))
-    Matrix[0,0] =density
-    Matrix[1:N+1,0] = z
-    Matrix[1:N+1,1] = a
-    Matrix[1:N+1,2] = m
-    
-    Data = np.loadtxt(Data_file)
-    Data = np.vstack((Matrix, Data))
-    np.savetxt('LegPy/photon_data/'+name+'.txt', Data, fmt='%1.3E')
-
-def New_electron_data(data, radiation_length, name):
-    #data must be a txt file with two columns, first column must be electron energy in MeV (from lower to higher energies)
-    #and second one must be CSDA (continuous slow-down approximation) range in g/cm^2
-    #radiation_length in cm
-    data = np.loadtxt(data+'.txt')
-    data = np.append([[radiation_length, 0.]], data, axis=0)
-    np.savetxt(name+'.txt', data, fmt='%1.3E')

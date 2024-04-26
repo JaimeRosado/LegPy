@@ -231,7 +231,8 @@ class gamma_hists:
         ang_out_df.to_excel(hist_writer, sheet_name='Ang_Spect_out_Photons')
         E_out_df.to_excel(hist_writer, sheet_name='En_Spect_out_Photons')
         E_ab_df.to_excel(hist_writer, sheet_name='Spect_abs_Energy')
-        hist_writer.save()
+        # hist_writer.save() # obsolete
+        hist_writer.close()
         print(fname + ' written onto disk')
 
 class fluence:

@@ -1,7 +1,5 @@
 import random
 import math
-# import numpy
-#import matplotlib.pyplot as plt
 
 #JR: Pongo gamma como parámetro de entrada
 def theta_KN(gamma):
@@ -76,74 +74,3 @@ def rotate(vx, vy, vz, rot_angle, x, y, z):
              + (ct+vz*vz*(1.-ct)) * z)
 
     return (x_rot, y_rot, z_rot)
-
-
-# theta_1 = 0.01 # deg.
-# phi_1 = 45.0 # deg.
-
-# theta_1 = math.radians(theta_1) # 
-# phi_1 = math.radians(phi_1) # 
-# #
-# x_1 = math.sin(theta_1)*math.cos(phi_1)
-# y_1 = math.sin(theta_1)*math.sin(phi_1)
-# z_1 = math.cos(theta_1)
-
-# x_rot = math.sin(phi_1)
-# y_rot = -math.cos(phi_1)
-# z_rot = 0.
-# # print(x_1, y_1, z_1)
-# # print(x_rot, y_rot, z_rot)
-# theta_rot = -math.acos(z_1)
-# # print(theta_rot)
-
-# theta_C = math.radians(60.0) # deg.
-# phi_C = math.radians(40.0) # deg.
-# #
-# x_C = math.sin(theta_C)*math.cos(phi_C)
-# y_C = math.sin(theta_C)*math.sin(phi_C)
-# z_C = math.cos(theta_C)
-# #
-# x_2, y_2, z_2 = rotate(x_rot, y_rot, z_rot, theta_rot, x_C, y_C, z_C)
-# #
-# theta_2 = math.acos(z_2)
-# phi_2 = math.atan(y_2/z_2)
-# #
-# # print(math.degrees(theta_2), math.degrees(phi_2))
-# #
-# NA = theta_phi_new_frame(theta_1, phi_1, theta_C, phi_C)
-
-
-
-# v_x = ([0, x_1])
-# v_y = ([0, y_1])
-# v_z = ([0, z_1])
-
-# v_x_C =([0, x_C])
-# v_y_C =([0, y_C])
-# v_z_C =([0, z_C])
-
-# v_x_2 = ([0, x_2])
-# v_y_2 = ([0, y_2])
-# v_z_2 = ([0, z_2])
-
-# fig_test = plt.figure()
-# ax_g = fig_test.add_subplot(111, projection='3d')
-# ax_g.set_xlabel("x")
-# ax_g.set_ylabel("y")
-# ax_g.set_zlabel("z")
-# ax_g.set_xlim(-1.,1.)
-# ax_g.set_ylim(-1.,1.)
-# ax_g.set_zlim(-1.,1.)
-# ax_g.plot3D(v_x, v_y, v_z, linewidth = 1.5, color = 'blue')
-# ax_g.plot3D(v_x_C, v_y_C, v_z_C, linewidth = 1.5, color = 'red')
-# ax_g.plot3D(v_x_2, v_y_2, v_z_2, linewidth = 1.5, color = 'black')
-# theta_2 = NA[0]
-# phi_2 = NA[1]
-# print(math.degrees(theta_2), math.degrees(phi_2))
-# v_x_2 = ([0, math.sin(theta_2)*math.cos(phi_2)])
-# v_y_2 = ([0, math.sin(theta_2)*math.sin(phi_2)])
-# v_z_2 = ([0, math.cos(theta_2)])
-# ax_g.plot3D(v_x_2, v_y_2, v_z_2, linewidth = 1.5, color = 'green')
-
-
-# plt.show()
