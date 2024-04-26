@@ -2,7 +2,7 @@
 
 from .MC import Plot_beam, MC
 from .geometry import Geometry
-from .medium import Medium, Material_Builder, List_Media
+from .medium import Medium, List_Media
 from .beam import Beam
 from .figures import *
 from .spectrum import Spectrum, List_Spectra
