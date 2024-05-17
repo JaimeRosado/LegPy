@@ -16,7 +16,7 @@ warnings.filterwarnings(
 
 def Geometry(name='cylinder', x=None, y=None, z=None, r=None, diam=None,
              n_x=None, n_y=None, n_z=None, n_r=None,
-             z_ch=None, r_ch=None):
+             z_int=None, r_int=None):
 
     if name == 'orthohedron':
         if x is None or y is None or z is None:
@@ -25,11 +25,11 @@ def Geometry(name='cylinder', x=None, y=None, z=None, r=None, diam=None,
             raise ValueError('Please, input n_x, n_y and n_z.')
         if x<=0. or y<=0. or z<=0.:
             raise ValueError('x, y, z should be greater than 0.')
-        if z_ch is not None:
-            if z_ch<=0. or z_ch>=z:
-                raise ValueError('z_ch should be between 0 and z.')
+        if z_int is not None:
+            if z_int<=0. or z_int>=z:
+                raise ValueError('z_int should be between 0 and z.')
         # Cartesian voxelization
-        geometry = Ortho(x, y, z, z_ch)
+        geometry = Ortho(x, y, z, z_int)
         voxelization = cart_vox(geometry, n_x, n_y, n_z)
 
     elif name == 'cylinder':
@@ -39,17 +39,17 @@ def Geometry(name='cylinder', x=None, y=None, z=None, r=None, diam=None,
             r = diam / 2.
         if r<=0. or z<=0.:
             raise ValueError('r and z should be greater than 0.')
-        if z_ch is not None:
-            if z_ch<=0. or z_ch>=z:
-                raise ValueError('z_ch should be between 0 and z.')
-        elif r_ch is not None:
-            if r_ch<=0. or r_ch>=r:
-                raise ValueError('r_ch should be between 0 and r.')
+        if z_int is not None:
+            if z_int<=0. or z_int>=z:
+                raise ValueError('z_int should be between 0 and z.')
+        elif r_int is not None:
+            if r_int<=0. or r_int>=r:
+                raise ValueError('r_int should be between 0 and r.')
         if n_x is not None and n_y is not None and n_z is not None: # Cartesian voxelization
-            geometry = Cylinder(r, z, z_ch, r_ch)
+            geometry = Cylinder(r, z, z_int, r_int)
             voxelization = cart_vox(geometry, n_x, n_y, n_z)
         elif n_z is not None and n_r is not None: # Cylindrical voxelization
-            geometry = Cylinder(r, z, z_ch, r_ch)
+            geometry = Cylinder(r, z, z_int, r_int)
             voxelization = cyl_vox(geometry, n_z, n_r)
         else:
             raise ValueError('Please, input either n_x, n_y and n_z or n_z and n_r.')
@@ -61,17 +61,17 @@ def Geometry(name='cylinder', x=None, y=None, z=None, r=None, diam=None,
             r = diam / 2.
         if r<=0.:
             raise ValueError('r should be greater than 0.')
-        if z_ch is not None:
-            if z_ch<=-r or z_ch>=r:
-                raise ValueError('z_ch should be between -r and r.')
-        elif r_ch is not None:
-            if r_ch<=0. or r_ch>=r:
-                raise ValueError('r_ch should be between 0 and r.')
+        if z_int is not None:
+            if z_int<=-r or z_int>=r:
+                raise ValueError('z_int should be between -r and r.')
+        elif r_int is not None:
+            if r_int<=0. or r_int>=r:
+                raise ValueError('r_int should be between 0 and r.')
         if n_x is not None and n_y is not None and n_z is not None: # Cartesian voxelization
-            geometry = Sphere(r, z_ch, r_ch)
+            geometry = Sphere(r, z_int, r_int)
             voxelization = cart_vox(geometry, n_x, n_y, n_z)
         elif n_r is not None: # Spherical voxelization
-            geometry = Sphere(r, z_ch, r_ch)
+            geometry = Sphere(r, z_int, r_int)
             voxelization = sph_vox(geometry, n_r)
         else:
             raise ValueError('Please, input either n_x, n_y and n_z or n_r.')
@@ -86,7 +86,7 @@ def Geometry(name='cylinder', x=None, y=None, z=None, r=None, diam=None,
 
 ##### Geometry classes
 class Ortho:
-    def __init__(self, x, y, z, z_ch):
+    def __init__(self, x, y, z, z_int):
         self.x = x
         self.y = y
         self.z = z
@@ -104,8 +104,8 @@ class Ortho:
         self.cur_med = 0
         self.cur_dist = 0.
         
-        self.z_ch = z_ch
-        if z_ch is None:
+        self.z_int = z_int
+        if z_int is None:
             self.N_media = 1
             self.init_medium = self.nothing
         else:
@@ -139,7 +139,7 @@ class Ortho:
     def init_medium(self, theta, phi):
         # For a new particle after in_out
         # obtain the medium of the current position
-        dist = self.cur_z - self.z_ch
+        dist = self.cur_z - self.z_int
         self.cur_dist = dist
         if dist<0.: # first medium
             self.cur_med = 0
@@ -163,7 +163,7 @@ class Ortho:
         # Output True/False for change of medium, the current position
         # and the track length correction factor
         self.try_position(p_forw)
-        dist = self.temp_z - self.z_ch
+        dist = self.temp_z - self.z_int
 
         if dist<0.:
             med = 0
@@ -225,12 +225,12 @@ class Ortho:
         else:
             x = np.linspace(self.x_left, self.x_right, 50)
             y = np.linspace(self.y_left, self.y_right, 50)
-            z = np.linspace(self.z_bott, self.z_ch, 50)
+            z = np.linspace(self.z_bott, self.z_int, 50)
 
             fig = plt.figure()
             x_grid, y_grid = np.meshgrid(x, y)
             z1_grid = (np.ones_like(x_grid))*self.z_bott
-            z2_grid = (np.ones_like(x_grid))*self.z_ch
+            z2_grid = (np.ones_like(x_grid))*self.z_int
             ax = fig.add_subplot(111, projection='3d')
             ax.plot_surface(x_grid, y_grid, z1_grid, color = 'c', alpha=0.25)
             ax.plot_surface(x_grid, y_grid, z2_grid, color = 'c', alpha=0.25)
@@ -250,11 +250,11 @@ class Ortho:
             
             x = np.linspace(self.x_left, self.x_right, 50)
             y = np.linspace(self.y_left, self.y_right, 50)
-            z = np.linspace(self.z_ch, self.z_top, 50)
+            z = np.linspace(self.z_int, self.z_top, 50)
 
             
             x_grid, y_grid = np.meshgrid(x, y)
-            z1_grid = (np.ones_like(x_grid))*self.z_ch
+            z1_grid = (np.ones_like(x_grid))*self.z_int
             z2_grid = (np.ones_like(x_grid))*self.z_top
             
             ax.plot_surface(x_grid, y_grid, z1_grid, color = 'r', alpha=0.25)
@@ -324,27 +324,27 @@ class Ortho:
 
 
 class Cylinder(Ortho):
-    def __init__(self, r, z, z_ch, r_ch):
-        super().__init__(2.*r, 2.*r, z, z_ch)
+    def __init__(self, r, z, z_int, r_int):
+        super().__init__(2.*r, 2.*r, z, z_int)
         self.r = r
         self.cur_r2 = 0.
         self.cur_r = 0.
 
-        self.z_ch = z_ch
-        self.r_ch = r_ch
-        if z_ch is None and r_ch is None:
+        self.z_int = z_int
+        self.r_int = r_int
+        if z_int is None and r_int is None:
             self.N_media = 1
-            self.r2_ch = None
+            self.r2_int = None
             self.init_medium = self.nothing
         else:
             self.N_media = 2
-            if z_ch is not None:
-                self.r_ch = None # If z_ch is given, r_ch is ignored
-                self.r2_ch = None
-                # init_medium, update_medium and update_position already defined for z_ch
+            if z_int is not None:
+                self.r_int = None # If z_int is given, r_int is ignored
+                self.r2_int = None
+                # init_medium, update_medium and update_position already defined for z_int
             else:
-                self.r2_ch = r_ch**2
-                # overwrite methods for r_ch
+                self.r2_int = r_int**2
+                # overwrite methods for r_int
                 self.init_medium = self.init_medium_r
                 self.update_medium = self.update_medium_r
                 self.update_position = self.update_position_r
@@ -378,7 +378,7 @@ class Cylinder(Ortho):
     def init_medium_r(self, theta, phi):
         # For a new particle after in_out
         # obtain the medium of the current position
-        dist = self.cur_r - self.r_ch
+        dist = self.cur_r - self.r_int
         self.cur_dist = dist
         if dist<0.: # first medium
             self.cur_med = 0
@@ -407,7 +407,7 @@ class Cylinder(Ortho):
         cur_dist = self.cur_dist
         d = abs(cur_dist)
         self.try_position(p_forw)
-        dist = self.temp_r - self.r_ch
+        dist = self.temp_r - self.r_int
         self.cur_dist = dist
 
         if s<d: # Step not reaching the interface
@@ -427,7 +427,7 @@ class Cylinder(Ortho):
         # To transport the particle to the interface
         # p_int = cur_pos + sol * direction, 0 < sol < 1
         # sol = -b +- sqrt(rad)
-        dif_r2 = self.cur_r2 - self.r2_ch # >0 from outer cylinder
+        dif_r2 = self.cur_r2 - self.r2_int # >0 from outer cylinder
         b = (self.cur_x*direction[0] + self.cur_y*direction[1]) / t2
         rad = b**2 - dif_r2/t2 # radicand
         if rad<0.: # Step inside the outer cylinder (no solution)
@@ -481,12 +481,12 @@ class Cylinder(Ortho):
             ax.set_ylim(-smax/2, smax/2)
 
         
-        elif self.z_ch != None:
+        elif self.z_int != None:
             
             fig = plt.figure()
             ax = fig.add_subplot(111, projection='3d')
 
-            z = np.linspace(0., self.z_ch, 50)
+            z = np.linspace(0., self.z_int, 50)
             theta = np.linspace(0., 2. * np.pi, 50)
             theta_grid, z_grid = np.meshgrid(theta, z)
             x_grid = self.r * np.cos(theta_grid)
@@ -499,9 +499,9 @@ class Cylinder(Ortho):
             art3d.pathpatch_2d_to_3d(p, z=0, zdir="z")
             p = Circle((0, 0), self.r, color = 'red', alpha = 0.25)
             ax.add_patch(p)
-            art3d.pathpatch_2d_to_3d(p, z=self.z_ch, zdir="z")
+            art3d.pathpatch_2d_to_3d(p, z=self.z_int, zdir="z")
 
-            z = np.linspace(self.z_ch, self.z, 50)
+            z = np.linspace(self.z_int, self.z, 50)
             theta = np.linspace(0., 2. * np.pi, 50)
             theta_grid, z_grid = np.meshgrid(theta, z)
             x_grid = self.r * np.cos(theta_grid)
@@ -528,14 +528,14 @@ class Cylinder(Ortho):
             z = np.linspace(0., self.z, 50)
             theta = np.linspace(0., 2. * np.pi, 50)
             theta_grid, z_grid = np.meshgrid(theta, z)
-            x_grid = self.r_ch * np.cos(theta_grid)
-            y_grid = self.r_ch * np.sin(theta_grid)
+            x_grid = self.r_int * np.cos(theta_grid)
+            y_grid = self.r_int * np.sin(theta_grid)
             ax.plot_surface(x_grid, y_grid, z_grid, alpha=0.25,color='c')
 
-            p = Circle((0, 0), self.r_ch, color = 'c', alpha = 0.25)
+            p = Circle((0, 0), self.r_int, color = 'c', alpha = 0.25)
             ax.add_patch(p)
             art3d.pathpatch_2d_to_3d(p, z=0, zdir="z")
-            p = Circle((0, 0), self.r_ch, color = 'c', alpha = 0.25)
+            p = Circle((0, 0), self.r_int, color = 'c', alpha = 0.25)
             ax.add_patch(p)
             art3d.pathpatch_2d_to_3d(p, z=self.z, zdir="z")
             
@@ -573,29 +573,29 @@ class Cylinder(Ortho):
         return ax
 
 class Sphere(Cylinder):
-    def __init__(self, r, z_ch, r_ch):
-        super().__init__(2.*r, 2.*r, 2.*r, z_ch)
+    def __init__(self, r, z_int, r_int):
+        super().__init__(2.*r, 2.*r, 2.*r, z_int)
         self.r = r
         self.cur_r2 = 0.
         self.cur_r = 0.
         self.z_bott = -r
         self.z_top = r
 
-        self.z_ch = z_ch
-        self.r_ch = r_ch
-        if z_ch is None and r_ch is None:
+        self.z_int = z_int
+        self.r_int = r_int
+        if z_int is None and r_int is None:
             self.N_media = 1
-            self.r2_ch = None
+            self.r2_int = None
             self.init_medium = self.nothing
         else:
             self.N_media = 2
-            if z_ch is not None:
-                self.r_ch = None # If z_ch is given, r_ch is ignored
-                self.r2_ch = None
-                # init_medium, update_medium and update_position already defined for z_ch
+            if z_int is not None:
+                self.r_int = None # If z_int is given, r_int is ignored
+                self.r2_int = None
+                # init_medium, update_medium and update_position already defined for z_int
             else:
-                self.r2_ch = r_ch**2
-                # overwrite methods for r_ch
+                self.r2_int = r_int**2
+                # overwrite methods for r_int
                 self.init_medium = self.init_medium_r
                 self.update_medium = self.update_medium_r
                 self.update_position = self.update_position_r
@@ -647,7 +647,7 @@ class Sphere(Cylinder):
         cur_dist = self.cur_dist
         d = abs(cur_dist)
         self.try_position(p_forw)
-        dist = self.temp_r - self.r_ch
+        dist = self.temp_r - self.r_int
         self.cur_dist = dist
 
         if s<d: # Step not reaching the interface
@@ -663,7 +663,7 @@ class Sphere(Cylinder):
         # To transport the particle to the interface
         # p_int = cur_pos + sol * direction, 0 < sol < 1
         # sol = -b +- sqrt(rad)
-        dif_r2 = self.cur_r2 - self.r2_ch # >0 from outer sphere
+        dif_r2 = self.cur_r2 - self.r2_int # >0 from outer sphere
         b = (self.cur_x*direction[0] + self.cur_y*direction[1] + self.cur_z*direction[2]) / s2
         rad = b**2 - dif_r2/s2 # radicand
         if rad<0.: # Step inside the outer sphere (no solution)
@@ -709,7 +709,7 @@ class Sphere(Cylinder):
             ax.set_xlabel("x (cm)")
             ax.set_ylabel("y (cm)")
             ax.set_zlabel("z (cm)")
-        elif self.z_ch!=None:
+        elif self.z_int!=None:
             
             N=200
             u = np.linspace(0., 2. * np.pi, N)
@@ -719,7 +719,7 @@ class Sphere(Cylinder):
             z = np.outer(np.ones_like(u), np.cos(v)) * self.r
             stride=2
             
-            v_2 = np.linspace(0., np.arccos(self.z_ch/self.r), N)
+            v_2 = np.linspace(0., np.arccos(self.z_int/self.r), N)
             x_2 = np.outer(np.cos(u), np.sin(v_2)) * self.r
             y_2 = np.outer(np.sin(u), np.sin(v_2)) * self.r
             z_2 = np.outer(np.ones_like(u), np.cos(v_2)) * self.r
@@ -740,7 +740,7 @@ class Sphere(Cylinder):
             ax.set_zlabel("z (cm)")
         else :
             
-            coef= self.r_ch/self.r
+            coef= self.r_int/self.r
             N=200
             u = np.linspace(0., 2. * np.pi, N)
             v = np.linspace(0., np.pi, N)
