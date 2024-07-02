@@ -21,30 +21,30 @@ def Beam(name = 'parallel', diam = 0.0, x_s = 0., y_s = 0., z_s = 0., r_s = 0., 
         if diam==0.: # 'isotropic' without circular aperture (diam) 
             if x_ap==0. and y_ap==0.: # without rectangular aperture 
                 # => Source inside the medium
-
-                if x_s * y_s * z_s != 0.: # Size in cartesian coordinates => Source is an orthohedron centered at p_in.  
+                    
+                if x_s * y_s != 0. or x_s * z_s != 0. or y_s * z_s != 0.: # Source is an orthohedron centered at p_in.
+                    # One of the dimensions can be null (flat rectangle)
                     beam = Isotropic_in_ort(p_in, x_s, y_s, z_s, particle)
                     if r_s != 0.:
                         print('Warning: Source is an Orthohedron. Source radius is ignored') 
-                    
-                elif z_s * r_s != 0.: # Size in cylindrical coordinates => Cylindrical source 
+                         
+                elif z_s != 0.: # Cylindrical source (z_s, r_s). r_s might be equals 0 (segment along z direction)
                     beam = Isotropic_in_cyl(p_in, z_s, r_s, particle)
                     if x_s != 0. or y_s != 0.:
                         print('Warning: Cylindrical source. x, y dimensions are ignored') 
-                    
-                elif z_s == 0. and r_s != 0.: # Only radius => Source is a sphere
+
+                elif r_s != 0.: # Source is a sphere
                     beam = Isotropic_in_sph(p_in, r_s, particle)
                     if x_s != 0. or y_s != 0.:
                         print('Warning: Spherical source. x, y dimensions are ignored')
-                
+                        
                 elif x_s == 0. and y_s == 0. and z_s == 0. and r_s == 0.: # Point source
                     beam = Isotropic_in_p(p_in, particle)
                     
                 else:
                     raise ValueError('Please, input correct source size parameters')
               
-                            
-            else: # source outside the medium with rectangular aperture
+            else: # source outside the medium (or divergent beam) with rectangular aperture
                 if p_in[2]<0.:
                     dist = abs(p_in[2])
                     xy_in = p_in[0:-1] #xy coordinates of the source/focus might be != (0,0)
@@ -56,7 +56,7 @@ def Beam(name = 'parallel', diam = 0.0, x_s = 0., y_s = 0., z_s = 0., r_s = 0., 
                 else:
                     raise ValueError('Please, input valid source location outside the medium')      
                            
-        else: # divergent beam with circular aperture  
+        else: # source outside the medium (or divergent beam) with circular aperture  
             if x_ap!=0. or y_ap!=0.: 
                 raise ValueError('Please, input valid aperture type')          
             if p_in[2]<0.:           
