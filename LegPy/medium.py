@@ -23,9 +23,14 @@ def List_Media(text=None):
     df = pd.read_csv(pkg_resources.open_text(xs,'media_names.txt'), dtype=str, sep='\t')
     df.index += 1
     if text is not None:
-        df = df[df.Medium.str.contains(text, case=False)]
+        if isinstance(text, int):
+            df = df.head(text)
+        elif isinstance(text, str):
+            df = df[df.Medium.str.contains(text, case=False)]
+        else:
+            return print('Invalid parameter')            
     return df
-    
+
 class Medium:
     def __init__(self, name=None,  density=None, Pmol=None, N=None, Z=None, A=None, I=None,
                  e_E_min=0.01, e_E_max=1.25):
