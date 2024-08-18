@@ -221,7 +221,7 @@ Polycarbonate (Makrolon, Lexan)
 Polychlorostyrene
 Polyethylene
 Polyethylene Terephthalate (Mylar)
-Polymethyl Methacralate (Lucite, Perspex)
+Polymethyl Methacralate (Lucite, Perspex, Plexiglass)
 Polyoxymethylene
 Polypropylene
 Polystyrene
