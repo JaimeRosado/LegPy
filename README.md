@@ -10,7 +10,7 @@ Low energy gamma-ray simulation with Python.
 
 LegPy is a Monte Carlo (MC) simulation package for the transportation of gamma rays and electrons through any material medium. The algorithm includes several approximations that accelerate the simulation while maintaining reasonably accurate results. Notably, pair production and Bremsstrahlung are ignored, which limits the applicability of the algorithm to low energies ($\lesssim 5$ MeV, depending on the medium). The package includes a library of media containing all the necessary data taken from NIST databases. Several simple geometries of the target object are supported (cylinder, orthohedron and sphere). The target object can be filled either with one single medium or contained two media splitted by an interface surface. Photons or electrons are produced as either parallel/divergent beams or from isotropic sources with energies following any spectral distributions.
 
-The description of the MC algorithm and the validation of the various approximations are described in https://doi.org/10.1016/j.radmeas.2023.107029. In the latest version of the code, the generation of atomic $K_\alpha$ y $K_\beta$ X-rays after photoelectric absorption has been implemented, extending the validation of the algorithm beyond that shown in the above-mentioned paper.
+The description of the MC algorithm and the validation of the various approximations are described in https://doi.org/10.1016/j.radmeas.2023.107029. In the latest version of the code, the generation of atomic $K_\alpha$ y $K_\beta$ X-rays after photoelectric absorption has been implemented, extending the validation of the algorithm beyond that shown in the above-mentioned paper. See https://doi.org/10.48550/arXiv.2501.15979 for details.
 
 ## How to use
 
