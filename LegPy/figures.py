@@ -24,7 +24,7 @@ class esc_gammas:
         points = self.points[1:] # delete inital [0,0]
         plt.figure()
         plt.scatter(points[:,0] / math.pi, points[:,1], marker = '.')
-        plt.xlabel('Angle ('+'\u03C0'+'$\cdot$'+'rad)')
+        plt.xlabel(r'Angle ('+'\u03C0'+'$\cdot$'+'rad)')
         plt.ylabel('Energy (MeV)')
         plt.xlim(0., 1.)
         plt.ylim(0., 1.05 * self.E_max)
@@ -111,7 +111,7 @@ class e_hists:
         print('Fraction of backscattered electrons: ', round(tot_back/self.tot_n_part, 3))
         ax[2].bar(self.ang_bin / math.pi, back_hist, width = self.delta_ang / math.pi)
         ax[2].set_title('Angular spectrum of backscatered electrons')
-        ax[2].set_xlabel('Angle ('+'\u03C0'+'$\cdot$'+'rad)')
+        ax[2].set_xlabel(r'Angle ('+'\u03C0'+'$\cdot$'+'rad)')
         #ax[2].set_xlim(0., 1.)
         ax[2].set_ylabel('Number of electrons')
 
@@ -179,7 +179,7 @@ class gamma_hists:
         ang_out_hist = self.ang_out_hist.hist
         ax[0].bar(self.ang_bin / math.pi, ang_out_hist, width = self.delta_ang / math.pi)
         ax[0].set_title('Angular spectrum of outgoing photons')
-        ax[0].set_xlabel('Angle ('+'\u03C0'+'$\cdot$'+'rad)')
+        ax[0].set_xlabel(r'Angle ('+'\u03C0'+'$\cdot$'+'rad)')
         #ax[0].set_xlim(0., 1.)
         ax[0].set_ylabel('Number of photons')
 
