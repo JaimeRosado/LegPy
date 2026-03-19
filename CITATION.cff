@@ -9,6 +9,10 @@ authors:
     orcid: https://orcid.org/0000-0001-8208-9480
   - family-names: Moya
     given-names: Víctor
+  - family-names: Malagón
+    given-names: Carlos
+  - family-names: Rubio
+    given-names: Sergio
 title: LegPy
 doi: 10.5281/zenodo.7882780
 version: v1.2

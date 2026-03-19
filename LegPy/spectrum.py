@@ -155,7 +155,7 @@ def Plot_beam_spectrum(spectrum, n_part, n_bin):
     
     plt.xlabel('Energy (MeV)')
     plt.ylabel('Probability' + ' (MeV$^{-1}$)')
-    plt.title('Energy spectrum of incident gamma-ray beam')
+    plt.title('Energy spectrum of incident particles')
     plt.xlim(0.001, 20.)
     plt.grid(True, which = 'both')
     # plt.legend()

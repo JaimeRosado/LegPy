@@ -91,12 +91,6 @@ Ac
 Th
 Pa
 U
-Np
-Pu
-Am
-Cm
-Bk
-Cf
 A-150 Tissue-Equivalent Plastic
 Acetone
 Acetylene
@@ -132,6 +126,7 @@ Calcium Fluoride
 Calcium Oxide
 Calcium Sulfate
 Calcium Tungstate
+Carbon (Graphite)
 Carbon Dioxide
 Carbon Tetrachloride
 Cellulose Acetate, Cellophane
@@ -144,7 +139,7 @@ Chlorobenzene
 Chloroform
 Concrete, Portland
 Cyclohexane
-1,2-Ddihlorobenzene
+1,2-Dichlorobenzene
 Dichlorodiethyl Ether
 1,2-Dichloroethane
 Diethyl Ether
@@ -165,11 +160,9 @@ Freon-13
 Freon-13B1
 Freon-13I1
 Gadolinium Oxysulfide
-Gallium Arsenide
 Gel in Photographic Emulsion
 Glass, Lead
 Glass, Plate
-Glass, Pyrex
 Glucose
 Glutamine
 Glycerol
@@ -199,23 +192,20 @@ Methane
 Methanol
 Mix D Wax
 MS20 Tissue Substitute
-Muscle, Skeletal (ICRP).txt
-Muscle, Striated
+Muscle, Skeletal (ICRP)
+Muscle, Striated (ICRU)
 Muscle-Equivalent Liquid, with Sucrose
 Muscle-Equivalent Liquid, without Sucrose
 Naphthalene
 Nitrobenzene
 Nitrous Oxide
 Nylon, Du Pont ELVAmide 8062
-Nylon, type 6 and type 6/6
-Nylon, type 6/10
 Nylon, type 11 (Rilsan)
 Octane, Liquid
 Paraffin Wax
 N-Pentane
 Photographic Emulsion
 Plastic Scintillator (Vinyltoluene based)
-Plutonium Dioxide
 Polyacrylonitrile
 Polycarbonate (Makrolon, Lexan)
 Polychlorostyrene

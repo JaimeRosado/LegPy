@@ -138,11 +138,11 @@ class Medium:
             self.ph_data = ph_data
             self.e_data = e_data
 
-    def plot_mu(self, energies, l_style='', ph=True, inc=True, coh=True, pair=True, tot=True):
+    def plot_mu(self, energies, l_style='', ph=True, inc=True, coh=True, pair=True, en_abs=True, tot=True):
         if self.ph_data is None:
             print('No photon cross section data is available')
             return None
-        return Plot_Mu_vs_E(self.ph_data, energies, l_style, ph, inc, coh, pair, tot)
+        return Plot_Mu_vs_E(self.ph_data, energies, l_style, ph, inc, coh, pair, en_abs, tot)
 
     def plot_R(self, energies, units='cm', l_style = ''):
         if self.e_data is None:
@@ -215,12 +215,14 @@ class ph_gen:
         mu_phot, mu_incoh, mu_coh, mu_pair, mu_total = self.Mu_Cross_section(E)
         rand_mu = random.random() * mu_total      
         # cross section of pair production goes to the photoelectric one
-        if rand_mu <= mu_phot + mu_pair:
+        if rand_mu <= mu_phot:
             Process = 'Photoelectric'
-        elif rand_mu <= mu_phot + mu_incoh + mu_pair:
+        elif rand_mu <= mu_phot + mu_incoh:
             Process = 'Compton'
-        else:
+        elif rand_mu <= mu_phot + mu_incoh + mu_coh:
             Process = 'Coherent'
+        else:
+            Process = 'Pair Production'
         return Process
 
     def Mu_Phot_Cross_section(self, gamma):
@@ -236,6 +238,9 @@ class ph_gen:
                   )*4.989344e-25 * self.N_elec_mol * self.N_mol_mass
         return mu_inc
 
+    def Mu_en(self, E):
+        return 0.
+
 
 class ph_nist(ph_gen):
     def __init__(self, name, density, cs_nist, PZ, x_data):
@@ -248,25 +253,26 @@ class ph_nist(ph_gen):
         self.PZ = PZ
         self.x_data = x_data
 
-        if np.size(cs_nist, axis=1)==4: # Pair-production cs not loaded on text file
-            print("Pair-production cross section not available for this medium. It is set to 0.")
-            def zero(E):
-                return 0.
-            self.Mu_Pair_Cross_section = zero # Overwrite method
+        #if np.size(cs_nist, axis=1)==4: # Pair-production cs not loaded on text file
+        #    print("Pair-production cross section not available for this medium. It is set to 0.")
+        #    def zero(E):
+        #        return 0.
+        #    self.Mu_Pair_Cross_section = zero # Overwrite method
         
         self.init_E = np.array([[0., None, None, None, None, None]]) # Restart initial energies for a new simulation
 
     def init_MC(self, energies, pair=True):
         # Re-define Mu_Pair_Cross_section for a new simulation
         # Cross section data for uploaded initial energies
-        if np.size(self.cs_nist, axis=1)==5 and pair:
-            def func(E):
-                if E<=1.022:
-                    return 0.
-                mu_pair = np.interp(E, self.cs_nist[:,0], self.cs_nist[:,4])
-                return mu_pair
-            self.Mu_Pair_Cross_section = func
-        else:
+        #if pair:
+        #    def func(E):
+        #        if E<=1.022:
+        #            return 0.
+        #        mu_pair = np.interp(E, self.cs_nist[:,0], self.cs_nist[:,4])
+        #        return mu_pair
+        #    self.Mu_Pair_Cross_section = func
+        #else:
+        if not pair:
             def zero(E):
                 return 0.
             self.Mu_Pair_Cross_section = zero
@@ -293,7 +299,10 @@ class ph_nist(ph_gen):
         mu_total = mu_phot + mu_incoh + mu_coh + mu_pair
         return mu_phot, mu_incoh, mu_coh, mu_pair, mu_total
 
-    # This process is not implemented yet, but included in the total cross section
+    def Mu_en(self, E):
+        mu_en = np.interp(E, self.cs_nist[:,0], self.cs_nist[:,5])
+        return mu_en
+
     def Mu_Pair_Cross_section(self, E):
         if E<=1.022:
             return 0.
@@ -326,19 +335,21 @@ class ph_nist(ph_gen):
         return 0.
 
 
-def Plot_Mu_vs_E(medium, energies, l_style='', ph=True, inc=True, coh=True, pair=True, tot=True):
+def Plot_Mu_vs_E(medium, energies, l_style='', ph=True, inc=True, coh=True, pair=True, en_abs=True, tot=True):
 
     mu_ph = np.empty_like(energies)
     mu_inc = np.empty_like(energies)
     mu_coh = np.empty_like(energies)
     mu_pair = np.empty_like(energies)
+    mu_en = np.empty_like(energies)
     mu_tot = np.empty_like(energies)
 
     for i, E in enumerate(energies):
         mu_ph[i], mu_inc[i], mu_coh[i], mu_pair[i], mu_tot[i]  = medium.Mu_Cross_section(E)
+        mu_en[i] = medium.Mu_en(E)
 
     # pandas dataframe to excel
-    all_mu = np.stack((mu_ph, mu_inc, mu_coh, mu_pair), axis =1)
+    all_mu = np.stack((mu_ph, mu_inc, mu_coh, mu_pair, mu_en), axis =1)
 
     s_name = medium.source
     m_type = medium.name
@@ -363,6 +374,11 @@ def Plot_Mu_vs_E(medium, energies, l_style='', ph=True, inc=True, coh=True, pair
         line_pair = 'm' + l_style
         plt.loglog(energies, mu_pair, line_pair, label = pair_name)
 
+    if en_abs and s_name == 'NIST':
+        mu_en_name = 'Abs' + ' ' + s_name + ' ' + m_type
+        line_mu_en = 'k' + l_style
+        plt.loglog(energies, mu_en, line_mu_en, label = mu_en_name)
+
     if tot:
         tot_name = 'Tot' + ' ' + s_name + ' ' + m_type
         line_tot = 'c' + l_style
@@ -375,7 +391,9 @@ def Plot_Mu_vs_E(medium, energies, l_style='', ph=True, inc=True, coh=True, pair
     plt.legend()
 
     pd.set_option("display.precision", 3)
-    mu_df = pd.DataFrame(all_mu, columns = ['mu_phot', 'mu_inc', 'mu_coh', 'mu_pair'], index = energies*1000.)
+    mu_df = pd.DataFrame(all_mu,
+                         columns = ['mu_phot', 'mu_inc', 'mu_coh', 'mu_pair', 'mu_en'],
+                         index = energies*1000.)
     mu_df.index.name = 'Energy (keV)'
 
     # uncomment to display mu data
@@ -506,8 +524,13 @@ class e_gen:
 
     def l_model(self):
         R_max = self.R_ref[-1]
-        R_min = max(self.R_ref[0], self.length)  # =length for e_gen
-        self.R = np.arange(R_min, R_max, self.length)
+        if self.length>R_max:
+            R_min = R_max
+            self.length = R_max
+            self.R = np.array([self.length])
+        else:
+            R_min = max(self.R_ref[0], self.length)  # =length for e_gen
+            self.R = np.arange(R_min, R_max, self.length)
         self.s = np.ones_like(self.R) * self.length
         if R_min>self.length:  # only for e_nist
             self.s[0] = R_min

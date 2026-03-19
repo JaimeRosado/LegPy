@@ -229,4 +229,41 @@ def int_pro(f1, f2, xi, xf):
     return I
     
 
+# input: medium name in LegPy. 
+# Output: density, np.array: [E, mu_i] from LegPy database (E, mu_i) deleting first X-rays rows
+def del_Xray(med):    
+    mu = np.loadtxt('LegPy/photon_data/' + med + '.txt')
+    rho = mu[0,0]  
+### remove density and X-ray data
+    j = 0
+    for line in mu:
+        if line[0] == 0. and line[1] == 0. and line[2] == 0. and line[3] == 0. and line[4] == 0.:
+            i = j + 1
+            break
+        j = j + 1
+    mu = mu[i:,]
+    return rho, mu
 
+# input: medium name in LegPy. 
+# Output: np.array: [E, mu_en]
+def muen(med):
+    rho, mu = del_Xray(med)
+    mu_en = np.delete(mu, [1,2,3,4], axis = 1)
+    return mu_en
+
+# Simple log interpolation function
+def log_int(x0, x, y):
+    
+    if int(np.any(x0 < 0)) or int(np.any(x < 0)) or int(np.any(y < 0)):
+        raise ValueError('Negative values cannor be used in this log-interpolation', has_negative)
+    
+    if x0.max() > x.max() or x0.min() < x.min():
+        raise ValueError('Limits of x0 array has to be inside the x array')
+    
+    logx = np.log10(x)
+    logy = np.log10(y)
+    logx0 = np.log10(x0)
+    logy0 = np.interp(logx0, logx, logy)
+    y0 = 10.**logy0
+    
+    return y0

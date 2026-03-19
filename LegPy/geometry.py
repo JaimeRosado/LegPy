@@ -303,11 +303,14 @@ class Ortho:
     def Edep_plot(self, Edep):
         self.voxelization.plot(Edep)
 
-    def tracks(self, p1, p2, ax):
+    def tracks(self, p1, p2, ax, particle_type):
         track_x = [p1[0], p2[0]]
         track_y = [p1[1], p2[1]]
         track_z = [p1[2], p2[2]]
-        ax.plot3D(track_x, track_y, track_z, linewidth = 0.5, color = 'blue')
+        colors = {'photon': 'black',
+                  'electron': 'blue',
+                  'positron': 'red'}
+        ax.plot3D(track_x, track_y, track_z, linewidth = 0.5, color = colors[particle_type])
 
     def points(self, p1, Edep, E0, ax):
         if Edep > 0.95 * E0:
@@ -327,6 +330,7 @@ class Cylinder(Ortho):
     def __init__(self, r, z, z_int, r_int):
         super().__init__(2.*r, 2.*r, z, z_int)
         self.r = r
+        self.r2 = r**2 #JR
         self.cur_r2 = 0.
         self.cur_r = 0.
 
@@ -576,6 +580,7 @@ class Sphere(Cylinder):
     def __init__(self, r, z_int, r_int):
         super().__init__(2.*r, 2.*r, 2.*r, z_int)
         self.r = r
+        self.r2 = r**2 #JR
         self.cur_r2 = 0.
         self.cur_r = 0.
         self.z_bott = -r
@@ -810,7 +815,7 @@ class cart_vox:
     def to_df(self, Edep):
         print("Not implemented yet for cartesian voxelization.")
 
-    def to_excel(self, Edep_df):
+    def to_excel(self, Edep_df, fname):
         print("Not implemented yet for cartesian voxelization.")
 
     def plot(self, Edep):
@@ -893,6 +898,8 @@ class cyl_vox:
         return Edep_df
 
     def to_excel(self, Edep_df, fname):
+        Edep_df.index.name = r'z(cm) \ r(cm)'
+        # FA warning Edep_df.index.name = 'z(cm) \ r(cm)'
         exc_name = fname + '.xlsx'
         open(exc_name, "w") # to excel file
         Edep_df.to_excel(exc_name, sheet_name = 'Edep(r,z)', header = 'r(cm)', float_format = '%.3e') # includes bining data
@@ -981,11 +988,12 @@ class sph_vox:
 
     def to_df(self, Edep):
         # Save pandas dataframe to excel
-        Edep_df = pd.DataFrame(Edep, index = self.rbin, columns = ['keV/cm^3'])
+        Edep_df = pd.DataFrame(Edep, index = self.rbin, columns = ['keV/cm$^3$'])
         Edep_df.index.name = 'R(cm)'
         return Edep_df
     
     def to_excel(self, Edep_df, fname):
+        Edep_df.columns = ['keV/cm3']
         exc_name = fname + '.xlsx'
         open(exc_name, "w") # to excel file
         Edep_df.to_excel(exc_name, sheet_name = 'Edep(R)', float_format = '%.3e') # includes bining data

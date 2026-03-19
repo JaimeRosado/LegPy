@@ -2,9 +2,9 @@ import numpy as np
 import random
 import math
 
-#JR: Añado tipo de partícula particle = 'gamma' or 'electron'
+#JR: Añado tipo de partícula particle = 'photon', 'electron' or 'positron'
 def Beam(name = 'parallel', diam = 0.0, x_s = 0., y_s = 0., z_s = 0., r_s = 0., x_ap = 0., y_ap = 0., theta = 0.0, phi = 0.0,
-         p_in = np.array ([0., 0., 0.]), particle = 'gamma'):
+         p_in = np.array ([0., 0., 0.]), particle = 'photon'):
 
     theta, phi = math.radians(theta), math.radians(phi)
     
