@@ -1,6 +1,6 @@
 # LegPy
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8414274.svg)](https://doi.org/10.5281/zenodo.8414274)
+[![DOI](https://zenodo.org/badge/556585907.svg)](https://doi.org/10.5281/zenodo.7248099)
 
 Low energy gamma-ray simulation with Python.
 
